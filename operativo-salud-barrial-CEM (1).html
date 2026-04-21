@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Operativo de Salud Barrial — CEM Esquina</title>
+<style>
+  :root {
+    --verde: #0F2744;
+    --verde-claro: #E8EEF4;
+    --verde-medio: #1A3D5C;
+    --gris-bg: #F4F7FA;
+    --gris-borde: #C8D6E2;
+    --gris-texto: #5A7387;
+    --rojo: #E05C4A;
+    --amarillo: #F5C842;
+    --azul-esquina: #3AAEE0;
+    --verde-cem: #6CBF6A;
+    --texto: #1A2D3D;
+    --font: 'Barlow', system-ui, sans-serif;
+    --font-title: 'Barlow Condensed', system-ui, sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--gris-bg); color: var(--texto); font-size: 15px; }
+
+  /* HEADER */
+  .app-header {
+    background: var(--verde);
+    color: white;
+    padding: 14px 16px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    border-bottom: 3px solid var(--azul-esquina);
+  }
+  .app-header h1 { font-size: 18px; font-weight: 800; font-family: var(--font-title); letter-spacing: .03em; text-transform: uppercase; }
+  .app-header .sub { font-size: 11px; opacity: 0.75; margin-top: 2px; font-family: var(--font); font-weight: 400; letter-spacing: .02em; text-transform: uppercase; }
+  .badge-nro { background: var(--azul-esquina); border-radius: 6px; padding: 4px 12px; font-size: 13px; font-weight: 600; font-family: var(--font-mono); letter-spacing: .05em; }
+
+  /* PROGRESS */
+  .progress-wrap { background: white; border-bottom: 1px solid var(--gris-borde); padding: 10px 16px; }
+  .progress-steps { display: flex; gap: 4px; margin-bottom: 6px; }
+  .ps { flex: 1; height: 4px; border-radius: 2px; background: var(--gris-borde); transition: background .25s; }
+  .ps.done { background: var(--verde); }
+  .ps.active { background: var(--azul-esquina); }
+  .progress-label { font-size: 12px; color: var(--gris-texto); }
+  .progress-label strong { color: var(--azul-esquina); }
+
+  /* CONTENT */
+  .content { padding: 12px 16px 100px; max-width: 680px; margin: 0 auto; }
+
+  /* CARDS */
+  .card {
+    background: white; border-radius: 10px; border: 1px solid var(--gris-borde);
+    padding: 16px; margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 14px; font-weight: 800; color: var(--verde);
+    font-family: var(--font-title);
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--azul-esquina);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .ico { font-size: 16px; }
+  .sub-card {
+    background: var(--verde-claro); border-radius: 8px;
+    padding: 12px 14px; margin: 10px 0;
+    border-left: 3px solid var(--verde-medio);
+  }
+  .sub-card-title { font-size: 13px; font-weight: 700; font-family: var(--font-title); color: var(--verde); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* FORM ELEMENTS */
+  .fg { margin-bottom: 12px; }
+  .fg:last-child { margin-bottom: 0; }
+  label.lbl { display: block; font-size: 13px; color: var(--gris-texto); margin-bottom: 4px; font-weight: 600; }
+  input[type=text], input[type=number], input[type=date], input[type=tel], select, textarea {
+    width: 100%; padding: 9px 11px;
+    border: 1px solid var(--gris-borde); border-radius: 7px;
+    font-size: 14px; font-family: var(--font); color: #222;
+    background: white; appearance: none;
+    -webkit-appearance: none;
+    transition: border-color .15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--verde-medio);
+    box-shadow: 0 0 0 3px rgba(45,138,80,0.12);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  @media(max-width:480px) { .g3 { grid-template-columns: 1fr 1fr; } }
+
+  /* RADIO / CHECK */
+  .opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .opt {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; cursor: pointer;
+    background: var(--gris-bg); border: 1px solid var(--gris-borde);
+    border-radius: 20px; padding: 5px 11px;
+    transition: all .15s; user-select: none;
+  }
+  .opt input { display: none; }
+  .opt.checked { background: var(--verde-claro); border-color: var(--verde-medio); color: var(--verde); font-weight: 500; }
+  .opt input[type=radio]:checked ~ span,
+  .opt input[type=checkbox]:checked ~ span { color: var(--verde); }
+
+  /* ALERTS */
+  .alert { border-radius: 7px; padding: 8px 12px; font-size: 13px; margin-top: 6px; font-weight: 500; }
+  .alert-r { background: #fdecea; color: var(--rojo); border: 1px solid #f5c6c3; }
+  .alert-y { background: #fef3e2; color: #a04000; border: 1px solid #f9d5a7; }
+  .alert-g { background: var(--verde-claro); color: var(--verde); border: 1px solid #b2dfc2; }
+  .alert-b { background: #e8f0fe; color: #1a5276; border: 1px solid #b8cff5; }
+
+  /* FINDRISC */
+  .findrisc-score { font-size: 32px; font-weight: 500; color: var(--verde); font-family: var(--font-mono); }
+  .findrisc-wrap { display: flex; align-items: baseline; gap: 10px; }
+
+  /* CONVIVIENTE CARD */
+  .conv-card {
+    border: 1px solid var(--gris-borde); border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 10px; background: var(--gris-bg);
+  }
+  .conv-title { font-size: 13px; font-weight: 600; color: var(--verde-medio); margin-bottom: 10px; }
+
+  /* HIDDEN */
+  .hidden { display: none !important; }
+
+  /* INFO BOX */
+  .info-box { background: var(--gris-bg); border-radius: 8px; padding: 10px 14px; margin-top: 8px; }
+  .info-big { font-size: 24px; font-weight: 500; color: var(--verde); font-family: var(--font-mono); }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: white; border-top: 1px solid var(--gris-borde);
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 100;
+  }
+  .btn {
+    padding: 10px 22px; border-radius: 8px; font-size: 15px; font-family: var(--font);
+    font-weight: 600; cursor: pointer; border: none; transition: all .15s;
+  }
+  .btn-sec { background: var(--gris-bg); border: 1px solid var(--gris-borde); color: var(--gris-texto); }
+  .btn-sec:hover { background: #e8ede9; }
+  .btn-pri { background: var(--verde); color: white; }
+  .btn-pri:hover { background: var(--verde-medio); }
+  .btn-pri:active { transform: scale(.97); }
+  .nav-info { font-size: 13px; color: var(--gris-texto); text-align: center; line-height: 1.3; }
+  .nav-info strong { display: block; color: #222; font-size: 14px; }
+
+  /* SECTION */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SUMMARY */
+  .summary-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--verde-claro); font-size: 13px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: var(--gris-texto); }
+  .summary-val { font-weight: 500; text-align: right; max-width: 60%; }
+
+  /* GEO BUTTON */
+  .geo-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border: 1px solid var(--verde-medio);
+    border-radius: 7px; font-size: 13px; font-weight: 500;
+    color: var(--verde); background: white; cursor: pointer;
+    margin-top: 6px; transition: all .15s;
+  }
+  .geo-btn:hover { background: var(--verde-claro); }
+  .geo-status { font-size: 12px; color: var(--gris-texto); margin-top: 4px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: #222; color: white; padding: 10px 20px; border-radius: 8px;
+    font-size: 14px; font-weight: 500; z-index: 200; opacity: 0; transition: opacity .3s;
+    pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* CONFIG PANEL */
+  .config-panel {
+    background: var(--verde-claro); border: 1.5px solid var(--azul-esquina); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 16px;
+  }
+  .config-panel .cfg-title { font-size: 14px; font-weight: 700; font-family: var(--font-title); color: var(--verde); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+  .config-panel p { font-size: 13px; color: var(--gris-texto); margin-bottom: 8px; line-height: 1.5; }
+  .config-panel input { background: white; }
+
+  /* PRINT */
+  @media print {
+    .app-header, .progress-wrap, .bottom-nav, .config-panel { display: none !important; }
+    .content { padding: 0; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:32px;height:32px;background:var(--azul-esquina);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-title);font-size:14px;letter-spacing:-.5px;flex-shrink:0;">CEM</div>
+    <div>
+      <h1>Operativo de Salud Barrial</h1>
+      <div class="sub">Municipalidad de Esquina · Secretaría de Salud</div>
+    </div>
+  </div>
+  <div class="badge-nro" id="nroDisplay">#---</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps" id="progressBar">
+    <div class="ps active"></div><div class="ps"></div><div class="ps"></div>
+    <div class="ps"></div><div class="ps"></div><div class="ps"></div><div class="ps"></div>
+  </div>
+  <div class="progress-label" id="progressLabel"><strong>Paso 1</strong> de 7 — Datos del operativo y personales</div>
+</div>
+
+<div class="content">
+
+  <!-- ─── SECCIÓN 1 ─── -->
+  <div class="section active" id="sec1">
+    <div class="card">
+      <div class="card-title"><span class="ico">📍</span> Datos del operativo</div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Barrio / Localidad</label><input type="text" id="h_barrio" placeholder="Nombre del barrio"></div>
+        <div class="fg"><label class="lbl">Fecha</label><input type="date" id="h_fecha"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Profesional responsable</label><input type="text" id="h_prof" placeholder="Nombre y cargo"></div>
+        <div class="fg"><label class="lbl">N° de registro del día</label><input type="number" id="h_nro" placeholder="001" oninput="document.getElementById('nroDisplay').textContent='#'+(this.value||'---')"></div>
+      </div>
+      <div class="fg">
+        <label class="lbl">Georreferencia</label>
+        <div class="g2">
+          <input type="text" id="geo_lat" placeholder="Latitud" readonly>
+          <input type="text" id="geo_lon" placeholder="Longitud" readonly>
+        </div>
+        <button class="geo-btn" onclick="getGeo()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="10" r="3"/><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          Capturar GPS del dispositivo
+        </button>
+        <div class="geo-status" id="geo_status"></div>
+        <div class="fg" style="margin-top:8px"><label class="lbl">Referencia de ubicación</label><input type="text" id="geo_ref" placeholder="Ej: frente al polideportivo, esquina..."></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="ico">👤</span> Datos personales</div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Apellido</label><input type="text" id="apellido"></div>
+        <div class="fg"><label class="lbl">Nombre/s</label><input type="text" id="nombre"></div>
+      </div>
+      <div class="g3">
+        <div class="fg"><label class="lbl">DNI</label><input type="text" id="dni" placeholder="Sin puntos"></div>
+        <div class="fg"><label class="lbl">Fecha de nacimiento</label><input type="date" id="fnac" oninput="calcEdad()"></div>
+        <div class="fg"><label class="lbl">Edad</label><input type="number" id="edad" min="0" max="120" oninput="updateFINDRISC()"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Sexo registral</label>
+          <select id="sexo" onchange="toggleGineco()">
+            <option value="">Seleccionar</option><option>Femenino</option><option>Masculino</option><option>No binario / X</option>
+          </select>
+        </div>
+        <div class="fg"><label class="lbl">Identidad de género (opcional)</label><input type="text" id="genero" placeholder="Autopercibida"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Dirección / Manzana</label><input type="text" id="dir"></div>
+        <div class="fg"><label class="lbl">Teléfono</label><input type="tel" id="tel"></div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Escolaridad</label>
+          <select id="escolaridad">
+            <option value="">Seleccionar</option><option>Sin escolaridad</option><option>Primaria incompleta</option>
+            <option>Primaria completa</option><option>Secundaria incompleta</option>
+            <option>Secundaria completa</option><option>Terciario/Universitario</option>
+          </select>
+        </div>
+        <div class="fg"><label class="lbl">Situación laboral</label>
+          <select id="laboral">
+            <option value="">Seleccionar</option><option>Empleo formal</option><option>Empleo informal</option>
+            <option>Desocupado/a</option><option>Jubilado/a / Pensionado/a</option>
+            <option>Ama/o de casa</option><option>Estudiante</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg"><label class="lbl">Embarazo actual</label>
+        <div class="opts" id="emb_opts">
+          <label class="opt checked"><input type="radio" name="embarazo" value="No aplica" checked onchange="handleOpt(this);toggleEmbarazo()"><span>No aplica</span></label>
+          <label class="opt"><input type="radio" name="embarazo" value="No" onchange="handleOpt(this);toggleEmbarazo()"><span>No</span></label>
+          <label class="opt"><input type="radio" name="embarazo" value="Sí" onchange="handleOpt(this);toggleEmbarazo()"><span>Sí</span></label>
+          <label class="opt"><input type="radio" name="embarazo" value="Desconoce" onchange="handleOpt(this);toggleEmbarazo()"><span>Desconoce</span></label>
+        </div>
+      </div>
+      <div id="embarazo_block" class="hidden">
+        <div class="sub-card">
+          <div class="sub-card-title">Datos del embarazo</div>
+          <div class="g3">
+            <div class="fg"><label class="lbl">Semanas de gestación</label><input type="number" id="semanas" min="1" max="42"></div>
+            <div class="fg"><label class="lbl">N° de gestación</label><input type="number" id="ngest" min="1"></div>
+            <div class="fg"><label class="lbl">Partos previos</label><input type="number" id="npartos" min="0"></div>
+          </div>
+          <div class="fg"><label class="lbl">1° control prenatal</label>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="ctrl_pren" value="Sí, antes semana 13" onchange="handleOpt(this)"><span>Sí, antes de semana 13</span></label>
+              <label class="opt"><input type="radio" name="ctrl_pren" value="Sí, después semana 13" onchange="handleOpt(this)"><span>Sí, después de semana 13</span></label>
+              <label class="opt"><input type="radio" name="ctrl_pren" value="No realizó" onchange="handleOpt(this)"><span>No realizó</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">Lugar de controles</label>
+            <div class="opts">
+              <label class="opt"><input type="checkbox" name="lugar_ctrl" value="Asistencia Municipal/CIC" onchange="handleOpt(this)"><span>Asistencia Municipal / CIC</span></label>
+              <label class="opt"><input type="checkbox" name="lugar_ctrl" value="Hospital público" onchange="handleOpt(this)"><span>Hospital público</span></label>
+              <label class="opt"><input type="checkbox" name="lugar_ctrl" value="Privado" onchange="handleOpt(this)"><span>Consultorio privado</span></label>
+              <label class="opt"><input type="checkbox" name="lugar_ctrl" value="No realiza" onchange="handleOpt(this)"><span>No realiza</span></label>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="fg"><label class="lbl">Vacuna antigripal</label>
+              <select id="vac_gripe_emb"><option value="">Seleccionar</option><option>Sí</option><option>No</option><option>No sabe</option></select>
+            </div>
+            <div class="fg"><label class="lbl">Vacuna dTpa (tosferina)</label>
+              <select id="vac_dtpa"><option value="">Seleccionar</option><option>Sí</option><option>No</option><option>No sabe</option></select>
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">Complicaciones referidas</label>
+            <div class="opts">
+              <label class="opt"><input type="checkbox" name="comp_emb" value="HTA/preeclampsia" onchange="handleOpt(this)"><span>HTA / preeclampsia</span></label>
+              <label class="opt"><input type="checkbox" name="comp_emb" value="Diabetes gestacional" onchange="handleOpt(this)"><span>Diabetes gestacional</span></label>
+              <label class="opt"><input type="checkbox" name="comp_emb" value="Anemia" onchange="handleOpt(this)"><span>Anemia</span></label>
+              <label class="opt"><input type="checkbox" name="comp_emb" value="Amenaza parto prematuro" onchange="handleOpt(this)"><span>Amenaza parto prematuro</span></label>
+              <label class="opt"><input type="checkbox" name="comp_emb" value="Ninguna" onchange="handleOpt(this)"><span>Ninguna referida</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">Cobertura SUMAR para el embarazo</label>
+            <div class="opts">
+              <label class="opt"><input type="radio" name="sumar_emb" value="Sí" onchange="handleOpt(this)"><span>Sí</span></label>
+              <label class="opt"><input type="radio" name="sumar_emb" value="No" onchange="handleOpt(this)"><span>No</span></label>
+              <label class="opt"><input type="radio" name="sumar_emb" value="No sabe" onchange="handleOpt(this)"><span>No sabe</span></label>
+            </div>
+          </div>
+          <div class="fg"><label class="lbl">Observaciones del embarazo</label><textarea id="obs_emb"></textarea></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 2 ─── -->
+  <div class="section" id="sec2">
+    <div class="card">
+      <div class="card-title"><span class="ico">⚖️</span> Mediciones clínicas</div>
+      <div class="g3">
+        <div class="fg"><label class="lbl">Peso (kg)</label><input type="number" id="peso" step="0.1" min="2" max="300" placeholder="72.5" oninput="calcBMI();updateFINDRISC()"></div>
+        <div class="fg"><label class="lbl">Talla (cm)</label><input type="number" id="talla" min="30" max="230" placeholder="165" oninput="calcBMI();updateFINDRISC()"></div>
+        <div class="fg"><label class="lbl">Perím. abdominal (cm)</label><input type="number" id="periabd" min="30" max="200" placeholder="88" oninput="updateFINDRISC()"></div>
+      </div>
+      <div id="bmiBox" class="info-box hidden">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="info-big" id="bmiVal">—</span>
+          <span id="bmiLabel" style="font-size:14px;color:var(--gris-texto)"></span>
+        </div>
+        <div id="bmiAlert"></div>
+      </div>
+      <div class="g2" style="margin-top:12px">
+        <div class="fg"><label class="lbl">TA Sistólica (mmHg)</label><input type="number" id="ta_sis" min="50" max="300" placeholder="120" oninput="checkTA();updateFINDRISC()"></div>
+        <div class="fg"><label class="lbl">TA Diastólica (mmHg)</label><input type="number" id="ta_dia" min="30" max="200" placeholder="80" oninput="checkTA();updateFINDRISC()"></div>
+      </div>
+      <div id="taAlert"></div>
+      <div class="fg" style="margin-top:12px"><label class="lbl">Glucemia capilar (mg/dL)</label><input type="number" id="glucemia" min="20" max="600" placeholder="95" oninput="checkGluc();updateFINDRISC()"></div>
+      <div class="fg"><label class="lbl">Condición de la toma</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="glucond" value="Ayunas" checked onchange="handleOpt(this);checkGluc();updateFINDRISC()"><span>En ayunas</span></label>
+          <label class="opt"><input type="radio" name="glucond" value="Postprandial" onchange="handleOpt(this);checkGluc();updateFINDRISC()"><span>Postprandial</span></label>
+          <label class="opt"><input type="radio" name="glucond" value="Sin dato" onchange="handleOpt(this);checkGluc();updateFINDRISC()"><span>Sin dato</span></label>
+        </div>
+      </div>
+      <div id="glucAlert"></div>
+      <div class="g3" style="margin-top:12px">
+        <div class="fg"><label class="lbl">FC (lpm)</label><input type="number" id="fc" min="30" max="250" placeholder="72"></div>
+        <div class="fg"><label class="lbl">Temperatura (°C)</label><input type="number" id="temp" step="0.1" placeholder="36.5"></div>
+        <div class="fg"><label class="lbl">SpO₂ (%)</label><input type="number" id="spo2" min="50" max="100" placeholder="97"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 3 ─── -->
+  <div class="section" id="sec3">
+    <div class="card">
+      <div class="card-title"><span class="ico">🩺</span> Condiciones de salud</div>
+
+      <!-- HTA -->
+      <div class="fg"><label class="lbl">Hipertensión arterial</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="hta" value="No" checked onchange="handleOpt(this);toggleMed('hta',false);updateFINDRISC()"><span>No</span></label>
+          <label class="opt"><input type="radio" name="hta" value="Sí, con tratamiento" onchange="handleOpt(this);toggleMed('hta',true);updateFINDRISC()"><span>Sí, con tto.</span></label>
+          <label class="opt"><input type="radio" name="hta" value="Sí, sin tratamiento" onchange="handleOpt(this);toggleMed('hta',true);updateFINDRISC()"><span>Sí, sin tto.</span></label>
+          <label class="opt"><input type="radio" name="hta" value="Diagnóstico hoy" onchange="handleOpt(this);toggleMed('hta',true);updateFINDRISC()"><span>Diagnóstico hoy</span></label>
+          <label class="opt"><input type="radio" name="hta" value="No sabe" onchange="handleOpt(this);toggleMed('hta',false);updateFINDRISC()"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div id="med_hta" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Medicamento para HTA</label><input type="text" id="hta_med" placeholder="Ej: enalapril 10mg"></div>
+        <div class="fg"><label class="lbl">Adherencia</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="hta_adh" value="Como prescripto (reciente)" onchange="handleOpt(this)"><span>Prescripción reciente</span></label>
+            <label class="opt"><input type="radio" name="hta_adh" value="Prescripción antigua" onchange="handleOpt(this)"><span>Prescripción antigua</span></label>
+            <label class="opt"><input type="radio" name="hta_adh" value="Medicación de otro" onchange="handleOpt(this)"><span>Medicación de otra persona</span></label>
+            <label class="opt"><input type="radio" name="hta_adh" value="Toma irregular" onchange="handleOpt(this)"><span>Toma irregular</span></label>
+            <label class="opt"><input type="radio" name="hta_adh" value="No toma" onchange="handleOpt(this)"><span>No toma</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- DIABETES -->
+      <div class="fg"><label class="lbl">Diabetes</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="dbts" value="No" checked onchange="handleOpt(this);toggleMed('dbts',false);updateFINDRISC()"><span>No</span></label>
+          <label class="opt"><input type="radio" name="dbts" value="Tipo 1 con tto." onchange="handleOpt(this);toggleMed('dbts',true);updateFINDRISC()"><span>Tipo 1, con tto.</span></label>
+          <label class="opt"><input type="radio" name="dbts" value="Tipo 2 con tto." onchange="handleOpt(this);toggleMed('dbts',true);updateFINDRISC()"><span>Tipo 2, con tto.</span></label>
+          <label class="opt"><input type="radio" name="dbts" value="Sí, sin tto." onchange="handleOpt(this);toggleMed('dbts',true);updateFINDRISC()"><span>Sí, sin tto.</span></label>
+          <label class="opt"><input type="radio" name="dbts" value="Diagnóstico hoy" onchange="handleOpt(this);toggleMed('dbts',true);updateFINDRISC()"><span>Diagnóstico hoy</span></label>
+          <label class="opt"><input type="radio" name="dbts" value="No sabe" onchange="handleOpt(this);toggleMed('dbts',false);updateFINDRISC()"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div id="med_dbts" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Medicamento para diabetes</label><input type="text" id="dbts_med" placeholder="Ej: metformina 500mg, insulina"></div>
+        <div class="fg"><label class="lbl">Adherencia</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="dbts_adh" value="Como prescripto (reciente)" onchange="handleOpt(this)"><span>Prescripción reciente</span></label>
+            <label class="opt"><input type="radio" name="dbts_adh" value="Prescripción antigua" onchange="handleOpt(this)"><span>Prescripción antigua</span></label>
+            <label class="opt"><input type="radio" name="dbts_adh" value="Medicación de otro" onchange="handleOpt(this)"><span>Medicación de otra persona</span></label>
+            <label class="opt"><input type="radio" name="dbts_adh" value="Toma irregular" onchange="handleOpt(this)"><span>Toma irregular</span></label>
+            <label class="opt"><input type="radio" name="dbts_adh" value="No toma" onchange="handleOpt(this)"><span>No toma</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDIOVASCULAR -->
+      <div class="fg"><label class="lbl">Enfermedades cardiovasculares</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="cv" value="Cardiopatía isquémica" onchange="handleOpt(this);toggleMedCheck('cv','med_cv')"><span>Cardiopatía isquémica</span></label>
+          <label class="opt"><input type="checkbox" name="cv" value="ACV previo" onchange="handleOpt(this);toggleMedCheck('cv','med_cv')"><span>ACV previo</span></label>
+          <label class="opt"><input type="checkbox" name="cv" value="Insuficiencia cardíaca" onchange="handleOpt(this);toggleMedCheck('cv','med_cv')"><span>Insuf. cardíaca</span></label>
+          <label class="opt"><input type="checkbox" name="cv" value="Arritmia" onchange="handleOpt(this);toggleMedCheck('cv','med_cv')"><span>Arritmia</span></label>
+          <label class="opt"><input type="checkbox" name="cv" value="Ninguna" onchange="handleOpt(this);toggleMedCheck('cv','med_cv')"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div id="med_cv" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Medicamentos cardiovasculares</label><input type="text" id="cv_med" placeholder="Ej: aspirineta, atenolol, estatina"></div>
+        <div class="fg"><label class="lbl">Adherencia</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="cv_adh" value="Como prescripto (reciente)" onchange="handleOpt(this)"><span>Prescripción reciente</span></label>
+            <label class="opt"><input type="radio" name="cv_adh" value="Prescripción antigua" onchange="handleOpt(this)"><span>Prescripción antigua</span></label>
+            <label class="opt"><input type="radio" name="cv_adh" value="Medicación de otro" onchange="handleOpt(this)"><span>Medicación de otra persona</span></label>
+            <label class="opt"><input type="radio" name="cv_adh" value="Irregular/No toma" onchange="handleOpt(this)"><span>Irregular / No toma</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESPIRATORIO -->
+      <div class="fg"><label class="lbl">Enfermedades respiratorias crónicas</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="resp" value="Asma" onchange="handleOpt(this);toggleMedCheck('resp','med_resp')"><span>Asma</span></label>
+          <label class="opt"><input type="checkbox" name="resp" value="EPOC" onchange="handleOpt(this);toggleMedCheck('resp','med_resp')"><span>EPOC</span></label>
+          <label class="opt"><input type="checkbox" name="resp" value="Otra crónica" onchange="handleOpt(this);toggleMedCheck('resp','med_resp')"><span>Otra crónica</span></label>
+          <label class="opt"><input type="checkbox" name="resp" value="Ninguna" onchange="handleOpt(this);toggleMedCheck('resp','med_resp')"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div id="med_resp" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Medicamentos respiratorios</label><input type="text" id="resp_med" placeholder="Ej: salbutamol, corticoide inhalado"></div>
+        <div class="fg"><label class="lbl">Adherencia</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="resp_adh" value="Como prescripto (reciente)" onchange="handleOpt(this)"><span>Prescripción reciente</span></label>
+            <label class="opt"><input type="radio" name="resp_adh" value="Prescripción antigua" onchange="handleOpt(this)"><span>Prescripción antigua</span></label>
+            <label class="opt"><input type="radio" name="resp_adh" value="Medicación de otro" onchange="handleOpt(this)"><span>Medicación de otra persona</span></label>
+            <label class="opt"><input type="radio" name="resp_adh" value="Irregular/No toma" onchange="handleOpt(this)"><span>Irregular / No toma</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ONCOLOGÍA -->
+      <div class="fg"><label class="lbl">Condiciones oncológicas</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="onco" value="No" checked onchange="handleOpt(this);toggleMed('onco_tto_block',false)"><span>No</span></label>
+          <label class="opt"><input type="radio" name="onco" value="En tratamiento" onchange="handleOpt(this);toggleMed('onco_tto_block',true)"><span>En tratamiento</span></label>
+          <label class="opt"><input type="radio" name="onco" value="Antecedente resuelto" onchange="handleOpt(this);toggleMed('onco_tto_block',false)"><span>Antecedente resuelto</span></label>
+          <label class="opt"><input type="radio" name="onco" value="Sospecha" onchange="handleOpt(this);toggleMed('onco_tto_block',false)"><span>Sospecha</span></label>
+          <label class="opt"><input type="radio" name="onco" value="No sabe" onchange="handleOpt(this);toggleMed('onco_tto_block',false)"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Tipo de cáncer (si aplica)</label><input type="text" id="onco_tipo" placeholder="Ej: mama, colorrectal, cuello uterino..."></div>
+      <div id="onco_tto_block" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Tratamiento oncológico actual</label><input type="text" id="onco_tto" placeholder="Ej: quimioterapia, tamoxifeno..."></div>
+      </div>
+
+      <!-- ITS -->
+      <div class="fg"><label class="lbl">ITS (Infecciones de transmisión sexual)</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="its" value="VIH/Sida" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>VIH/Sida</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Sífilis" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Sífilis</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Hepatitis B" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Hepatitis B</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Hepatitis C" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Hepatitis C</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Gonorrea" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Gonorrea</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Otra ITS" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Otra ITS</span></label>
+          <label class="opt"><input type="checkbox" name="its" value="Ninguna" onchange="handleOpt(this);toggleMedCheck('its','its_block')"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div id="its_block" class="hidden sub-card">
+        <div class="fg"><label class="lbl">Estado del tratamiento</label>
+          <select id="its_tto"><option value="">Seleccionar</option><option>En tratamiento</option><option>Sin tratamiento</option><option>Abandonado</option><option>Alta médica</option></select>
+        </div>
+        <div class="fg"><label class="lbl">Medicamentos ITS</label><input type="text" id="its_med" placeholder="Ej: TARV, penicilina..."></div>
+        <div class="fg"><label class="lbl">Adherencia</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="its_adh" value="Como prescripto (reciente)" onchange="handleOpt(this)"><span>Prescripción reciente</span></label>
+            <label class="opt"><input type="radio" name="its_adh" value="Prescripción antigua" onchange="handleOpt(this)"><span>Prescripción antigua</span></label>
+            <label class="opt"><input type="radio" name="its_adh" value="Irregular/No toma" onchange="handleOpt(this)"><span>Irregular / No toma</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANTECEDENTES FAMILIARES FINDRISC -->
+      <div class="fg"><label class="lbl">Antecedentes familiares de diabetes</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="ant_fam" value="0" checked onchange="handleOpt(this);updateFINDRISC()"><span>No / No sabe</span></label>
+          <label class="opt"><input type="radio" name="ant_fam" value="3" onchange="handleOpt(this);updateFINDRISC()"><span>Sí (abuelos, tíos, primos)</span></label>
+          <label class="opt"><input type="radio" name="ant_fam" value="5" onchange="handleOpt(this);updateFINDRISC()"><span>Sí (padre, madre, hermano/a, hijo/a)</span></label>
+        </div>
+      </div>
+
+      <div class="fg"><label class="lbl">Otras enfermedades crónicas</label><textarea id="otras_enf" placeholder="Ej: hipotiroidismo, ERC, epilepsia..."></textarea></div>
+      <div class="fg"><label class="lbl">Medicamentos para otras condiciones</label><input type="text" id="otras_med" placeholder="Listar"></div>
+      <div class="fg"><label class="lbl">Última consulta médica</label>
+        <select id="ultima_consulta">
+          <option value="">Seleccionar</option><option>Hace menos de 1 mes</option><option>Entre 1 y 6 meses</option>
+          <option>Entre 6 meses y 1 año</option><option>Hace más de 1 año</option><option>Nunca consultó</option><option>No recuerda</option>
+        </select>
+      </div>
+
+      <!-- GINECOLOGÍA -->
+      <div id="gineco_block" class="hidden">
+        <div style="border-top:1.5px solid var(--gris-borde);margin:14px 0 12px"></div>
+        <div class="sub-card-title" style="font-size:14px;font-weight:800;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--verde);margin-bottom:10px">Controles ginecológicos</div>
+        <div class="fg"><label class="lbl">Último PAP</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="pap" value="Hace menos de 1 año" onchange="handleOpt(this)"><span>Hace menos de 1 año</span></label>
+            <label class="opt"><input type="radio" name="pap" value="Entre 1 y 3 años" onchange="handleOpt(this)"><span>Entre 1 y 3 años</span></label>
+            <label class="opt"><input type="radio" name="pap" value="Hace más de 3 años" onchange="handleOpt(this)"><span>Hace más de 3 años</span></label>
+            <label class="opt"><input type="radio" name="pap" value="Nunca" onchange="handleOpt(this)"><span>Nunca</span></label>
+            <label class="opt"><input type="radio" name="pap" value="No recuerda" onchange="handleOpt(this)"><span>No recuerda</span></label>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Resultado último PAP</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="pap_res" value="Normal" onchange="handleOpt(this)"><span>Normal</span></label>
+            <label class="opt"><input type="radio" name="pap_res" value="Alterado" onchange="handleOpt(this)"><span>Alterado</span></label>
+            <label class="opt"><input type="radio" name="pap_res" value="No buscó resultado" onchange="handleOpt(this)"><span>No fue a buscar resultado</span></label>
+            <label class="opt"><input type="radio" name="pap_res" value="No aplica" onchange="handleOpt(this)"><span>No aplica</span></label>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Última mamografía</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="mamo" value="Hace menos de 1 año" onchange="handleOpt(this)"><span>Hace menos de 1 año</span></label>
+            <label class="opt"><input type="radio" name="mamo" value="Entre 1 y 2 años" onchange="handleOpt(this)"><span>Entre 1 y 2 años</span></label>
+            <label class="opt"><input type="radio" name="mamo" value="Hace más de 2 años" onchange="handleOpt(this)"><span>Hace más de 2 años</span></label>
+            <label class="opt"><input type="radio" name="mamo" value="Nunca" onchange="handleOpt(this)"><span>Nunca</span></label>
+            <label class="opt"><input type="radio" name="mamo" value="No corresponde" onchange="handleOpt(this)"><span>No corresponde por edad</span></label>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Última consulta ginecológica</label>
+          <select id="ult_gineco"><option value="">Seleccionar</option><option>Hace menos de 1 año</option><option>Entre 1 y 2 años</option><option>Hace más de 2 años</option><option>Nunca</option></select>
+        </div>
+        <div class="fg"><label class="lbl">Método anticonceptivo actual</label>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" name="mac" value="Píldora" onchange="handleOpt(this)"><span>Píldora</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="DIU" onchange="handleOpt(this)"><span>DIU</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="Inyectable" onchange="handleOpt(this)"><span>Inyectable</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="Preservativo" onchange="handleOpt(this)"><span>Preservativo</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="Implante" onchange="handleOpt(this)"><span>Implante</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="Ligadura" onchange="handleOpt(this)"><span>Ligadura</span></label>
+            <label class="opt"><input type="checkbox" name="mac" value="Ninguno" onchange="handleOpt(this)"><span>Ninguno</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINDRISC -->
+      <div id="findrisc_box" class="hidden" style="margin-top:14px;padding:14px;border:2px solid var(--azul-esquina);border-radius:10px;background:white">
+        <div style="font-size:13px;font-weight:800;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--verde);margin-bottom:8px">Índice FINDRISC — Riesgo de diabetes tipo 2</div>
+        <div class="findrisc-wrap">
+          <span class="findrisc-score" id="findrisc_val">0</span>
+          <span id="findrisc_label" style="font-size:14px;color:var(--gris-texto)">puntos</span>
+        </div>
+        <div id="findrisc_alert" style="margin-top:8px"></div>
+        <div style="font-size:11px;color:var(--gris-texto);margin-top:6px">Factores: edad, IMC, perímetro abdominal, TA, glucemia, antecedentes familiares.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 4 ─── -->
+  <div class="section" id="sec4">
+    <div class="card">
+      <div class="card-title"><span class="ico">🧠</span> Salud mental y consumo</div>
+      <div class="fg"><label class="lbl">¿Refiere problemas de salud mental?</label>
+        <div class="opts">
+          <label class="opt checked"><input type="radio" name="sm_ref" value="No" checked onchange="handleOpt(this)"><span>No</span></label>
+          <label class="opt"><input type="radio" name="sm_ref" value="Sí" onchange="handleOpt(this)"><span>Sí</span></label>
+          <label class="opt"><input type="radio" name="sm_ref" value="Prefiere no responder" onchange="handleOpt(this)"><span>Prefiere no responder</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Diagnósticos referidos</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="sm_dx" value="Depresión" onchange="handleOpt(this)"><span>Depresión</span></label>
+          <label class="opt"><input type="checkbox" name="sm_dx" value="Ansiedad" onchange="handleOpt(this)"><span>Ansiedad</span></label>
+          <label class="opt"><input type="checkbox" name="sm_dx" value="Trastorno bipolar" onchange="handleOpt(this)"><span>Bipolar</span></label>
+          <label class="opt"><input type="checkbox" name="sm_dx" value="Esquizofrenia/Psicosis" onchange="handleOpt(this)"><span>Esquizofrenia/Psicosis</span></label>
+          <label class="opt"><input type="checkbox" name="sm_dx" value="TDAH" onchange="handleOpt(this)"><span>TDAH</span></label>
+          <label class="opt"><input type="checkbox" name="sm_dx" value="Sin diagnóstico formal" onchange="handleOpt(this)"><span>Sin diagnóstico formal</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Tratamiento actual</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="sm_tto" value="Psicológico" onchange="handleOpt(this)"><span>Psicológico</span></label>
+          <label class="opt"><input type="radio" name="sm_tto" value="Psiquiátrico" onchange="handleOpt(this)"><span>Psiquiátrico</span></label>
+          <label class="opt"><input type="radio" name="sm_tto" value="Ambos" onchange="handleOpt(this)"><span>Ambos</span></label>
+          <label class="opt"><input type="radio" name="sm_tto" value="No, aunque lo necesita" onchange="handleOpt(this)"><span>No, aunque lo necesita</span></label>
+          <label class="opt"><input type="radio" name="sm_tto" value="No aplica" onchange="handleOpt(this)"><span>No aplica</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Indicadores de riesgo observados</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="sm_riesgo" value="Ideación suicida" onchange="handleOpt(this)"><span>Ideación suicida</span></label>
+          <label class="opt"><input type="checkbox" name="sm_riesgo" value="Signos de violencia" onchange="handleOpt(this)"><span>Signos de violencia</span></label>
+          <label class="opt"><input type="checkbox" name="sm_riesgo" value="Aislamiento severo" onchange="handleOpt(this)"><span>Aislamiento severo</span></label>
+          <label class="opt"><input type="checkbox" name="sm_riesgo" value="Desorganización" onchange="handleOpt(this)"><span>Desorganización</span></label>
+          <label class="opt"><input type="checkbox" name="sm_riesgo" value="Sin riesgo aparente" onchange="handleOpt(this)"><span>Sin riesgo aparente</span></label>
+        </div>
+      </div>
+
+      <div style="border-top:1.5px solid var(--gris-borde);margin:14px 0 12px"></div>
+      <div style="font-size:14px;font-weight:800;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--verde);margin-bottom:10px">Consumo de sustancias</div>
+
+      <!-- Sustancias dinámicas -->
+      <div id="sust_container">
+        <div class="fg"><label class="lbl">Tabaco</label>
+          <div class="opts">
+            <label class="opt checked"><input type="radio" name="s_tabaco" value="No" checked onchange="handleOpt(this);toggleSust('tabaco',false)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="s_tabaco" value="Sí" onchange="handleOpt(this);toggleSust('tabaco',true)"><span>Sí</span></label>
+          </div>
+          <div id="d_tabaco" class="hidden sub-card" style="margin-top:6px">
+            <div class="g2">
+              <div class="fg"><label class="lbl">Frecuencia</label>
+                <select id="f_tabaco"><option>Diario</option><option>Varios días/semana</option><option>Fines de semana</option><option>Ocasional</option><option>Raro</option></select>
+              </div>
+              <div class="fg"><label class="lbl">Cantidad</label><input type="text" id="c_tabaco" placeholder="Ej: 10 cig/día"></div>
+            </div>
+            <div class="fg"><label class="lbl">Riesgo evaluado</label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="r_tabaco" value="Bajo" onchange="handleOpt(this)"><span>Bajo</span></label>
+                <label class="opt"><input type="radio" name="r_tabaco" value="Moderado" onchange="handleOpt(this)"><span>Moderado</span></label>
+                <label class="opt"><input type="radio" name="r_tabaco" value="Alto — requiere intervención" onchange="handleOpt(this)"><span>Alto — intervención</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg"><label class="lbl">Alcohol</label>
+          <div class="opts">
+            <label class="opt checked"><input type="radio" name="s_alcohol" value="No" checked onchange="handleOpt(this);toggleSust('alcohol',false)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="s_alcohol" value="Sí" onchange="handleOpt(this);toggleSust('alcohol',true)"><span>Sí</span></label>
+          </div>
+          <div id="d_alcohol" class="hidden sub-card" style="margin-top:6px">
+            <div class="g2">
+              <div class="fg"><label class="lbl">Frecuencia</label>
+                <select id="f_alcohol"><option>Diario</option><option>Varios días/semana</option><option>Fines de semana</option><option>Ocasional</option><option>Raro</option></select>
+              </div>
+              <div class="fg"><label class="lbl">Cantidad habitual</label><input type="text" id="c_alcohol" placeholder="Ej: 2-3 cervezas/día"></div>
+            </div>
+            <div class="fg"><label class="lbl">¿Necesita tomar al despertar?</label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="alc_dep" value="No" onchange="handleOpt(this)"><span>No</span></label>
+                <label class="opt"><input type="radio" name="alc_dep" value="A veces" onchange="handleOpt(this)"><span>A veces</span></label>
+                <label class="opt"><input type="radio" name="alc_dep" value="Frecuentemente" onchange="handleOpt(this)"><span>Frecuentemente</span></label>
+              </div>
+            </div>
+            <div class="fg"><label class="lbl">Riesgo evaluado</label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="r_alcohol" value="Bajo" onchange="handleOpt(this)"><span>Bajo</span></label>
+                <label class="opt"><input type="radio" name="r_alcohol" value="Moderado" onchange="handleOpt(this)"><span>Moderado</span></label>
+                <label class="opt"><input type="radio" name="r_alcohol" value="Alto — requiere intervención" onchange="handleOpt(this)"><span>Alto — intervención</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg"><label class="lbl">Cannabis</label>
+          <div class="opts">
+            <label class="opt checked"><input type="radio" name="s_cannabis" value="No" checked onchange="handleOpt(this);toggleSust('cannabis',false)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="s_cannabis" value="Sí" onchange="handleOpt(this);toggleSust('cannabis',true)"><span>Sí</span></label>
+          </div>
+          <div id="d_cannabis" class="hidden sub-card" style="margin-top:6px">
+            <div class="fg"><label class="lbl">Frecuencia</label>
+              <select id="f_cannabis"><option>Diario</option><option>Varios días/semana</option><option>Fines de semana</option><option>Ocasional</option><option>Raro</option></select>
+            </div>
+            <div class="fg"><label class="lbl">Riesgo</label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="r_cannabis" value="Bajo" onchange="handleOpt(this)"><span>Bajo</span></label>
+                <label class="opt"><input type="radio" name="r_cannabis" value="Moderado" onchange="handleOpt(this)"><span>Moderado</span></label>
+                <label class="opt"><input type="radio" name="r_cannabis" value="Alto" onchange="handleOpt(this)"><span>Alto</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg"><label class="lbl">Cocaína / Pasta base</label>
+          <div class="opts">
+            <label class="opt checked"><input type="radio" name="s_cocaina" value="No" checked onchange="handleOpt(this);toggleSust('cocaina',false)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="s_cocaina" value="Sí" onchange="handleOpt(this);toggleSust('cocaina',true)"><span>Sí</span></label>
+          </div>
+          <div id="d_cocaina" class="hidden sub-card" style="margin-top:6px">
+            <div class="g2">
+              <div class="fg"><label class="lbl">Frecuencia</label>
+                <select id="f_cocaina"><option>Diario</option><option>Varios días/semana</option><option>Fines de semana</option><option>Ocasional</option><option>Raro</option></select>
+              </div>
+              <div class="fg"><label class="lbl">Sustancia</label><input type="text" id="c_cocaina" placeholder="Cocaína / Pasta base / PBC"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fg"><label class="lbl">Psicofármacos sin prescripción</label>
+          <div class="opts">
+            <label class="opt checked"><input type="radio" name="s_psico" value="No" checked onchange="handleOpt(this);toggleSust('psico',false)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="s_psico" value="Sí" onchange="handleOpt(this);toggleSust('psico',true)"><span>Sí</span></label>
+          </div>
+          <div id="d_psico" class="hidden sub-card" style="margin-top:6px">
+            <div class="fg"><label class="lbl">Qué toma y frecuencia</label><input type="text" id="c_psico" placeholder="Ej: clonazepam diario, compra en farmacia"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fg" style="margin-top:12px"><label class="lbl">Observaciones salud mental / consumo</label><textarea id="obs_sm" placeholder="Contexto clínico, familiar, derivación..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 5 ─── -->
+  <div class="section" id="sec5">
+    <div class="card">
+      <div class="card-title"><span class="ico">🏥</span> Cobertura y acceso al sistema de salud</div>
+      <div class="fg"><label class="lbl">Cobertura de salud</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="cobertura" value="PAMI" onchange="handleOpt(this)"><span>PAMI</span></label>
+          <label class="opt"><input type="radio" name="cobertura" value="Obra social nacional" onchange="handleOpt(this)"><span>Obra social nacional</span></label>
+          <label class="opt"><input type="radio" name="cobertura" value="IOMA / OS provincial" onchange="handleOpt(this)"><span>IOMA / OS provincial</span></label>
+          <label class="opt"><input type="radio" name="cobertura" value="Prepaga" onchange="handleOpt(this)"><span>Prepaga</span></label>
+          <label class="opt"><input type="radio" name="cobertura" value="Sin cobertura" onchange="handleOpt(this)"><span>Sin cobertura (solo público)</span></label>
+          <label class="opt"><input type="radio" name="cobertura" value="No sabe" onchange="handleOpt(this)"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Nombre de la OS / Prepaga</label><input type="text" id="os_nombre" placeholder="Ej: IOMA, OSECAC, Swiss Medical..."></div>
+      <div class="fg"><label class="lbl">Acceso habitual (puede marcar varios)</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="acceso" value="Asistencia Municipal / CIC" onchange="handleOpt(this)"><span>Asistencia Municipal / CIC</span></label>
+          <label class="opt"><input type="checkbox" name="acceso" value="Hospital municipal" onchange="handleOpt(this)"><span>Hospital municipal</span></label>
+          <label class="opt"><input type="checkbox" name="acceso" value="Hospital provincial" onchange="handleOpt(this)"><span>Hospital provincial</span></label>
+          <label class="opt"><input type="checkbox" name="acceso" value="Consultorio privado" onchange="handleOpt(this)"><span>Consultorio privado</span></label>
+          <label class="opt"><input type="checkbox" name="acceso" value="No accede regularmente" onchange="handleOpt(this)"><span>No accede regularmente</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Barreras de acceso</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="barrera" value="Lejanía / transporte" onchange="handleOpt(this)"><span>Lejanía / transporte</span></label>
+          <label class="opt"><input type="checkbox" name="barrera" value="Turnos difíciles" onchange="handleOpt(this)"><span>Turnos difíciles</span></label>
+          <label class="opt"><input type="checkbox" name="barrera" value="Horarios laborales" onchange="handleOpt(this)"><span>Horarios laborales</span></label>
+          <label class="opt"><input type="checkbox" name="barrera" value="Costo" onchange="handleOpt(this)"><span>Costo</span></label>
+          <label class="opt"><input type="checkbox" name="barrera" value="No lo considera necesario" onchange="handleOpt(this)"><span>No lo considera necesario</span></label>
+          <label class="opt"><input type="checkbox" name="barrera" value="Sin barreras" onchange="handleOpt(this)"><span>Sin barreras</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Vacunación al día</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="vacunas" value="Sí" onchange="handleOpt(this)"><span>Sí</span></label>
+          <label class="opt"><input type="radio" name="vacunas" value="No / Incompleto" onchange="handleOpt(this)"><span>No / Incompleto</span></label>
+          <label class="opt"><input type="radio" name="vacunas" value="No sabe" onchange="handleOpt(this)"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Control odontológico en el último año</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="odonto" value="Sí" onchange="handleOpt(this);document.getElementById('odonto_blk').classList.add('hidden')"><span>Sí</span></label>
+          <label class="opt"><input type="radio" name="odonto" value="No" onchange="handleOpt(this);document.getElementById('odonto_blk').classList.remove('hidden')"><span>No</span></label>
+          <label class="opt"><input type="radio" name="odonto" value="Nunca" onchange="handleOpt(this);document.getElementById('odonto_blk').classList.remove('hidden')"><span>Nunca fue</span></label>
+        </div>
+      </div>
+      <div id="odonto_blk" class="hidden sub-card">
+        <div class="fg"><label class="lbl">¿Cuándo fue la última vez?</label>
+          <select id="odonto_ult"><option value="">Seleccionar</option><option>Entre 1 y 2 años</option><option>Entre 2 y 5 años</option><option>Hace más de 5 años</option><option>Nunca</option><option>No recuerda</option></select>
+        </div>
+        <div class="fg"><label class="lbl">Motivo por el que no concurre</label><input type="text" id="odonto_motivo" placeholder="Ej: costo, no consigue turno..."></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 6 ─── -->
+  <div class="section" id="sec6">
+    <div class="card">
+      <div class="card-title"><span class="ico">🏠</span> Grupo familiar conviviente</div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Personas en el hogar (incl. entrevistado/a, máx. 7)</label>
+          <input type="number" id="n_hogar" min="1" max="7" placeholder="Ej: 4" oninput="updateConvivientes()">
+        </div>
+        <div class="fg"><label class="lbl">Menores de 18 años</label>
+          <input type="number" id="n_menores" min="0" max="20" placeholder="Ej: 2">
+        </div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Tipo de vivienda</label>
+          <select id="vivienda"><option value="">Seleccionar</option><option>Casa propia</option><option>Casa alquilada</option><option>Casa cedida/prestada</option><option>Casilla / rancho</option><option>Departamento</option><option>Vivienda precaria</option><option>Asentamiento informal</option></select>
+        </div>
+        <div class="fg"><label class="lbl">Agua potable</label>
+          <select id="agua"><option value="">Seleccionar</option><option>Red pública en la vivienda</option><option>Canilla comunitaria</option><option>Pozo / cisterna</option><option>Sin acceso seguro</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Saneamiento / cloacas</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="cloacas" value="Red cloacal" onchange="handleOpt(this)"><span>Red cloacal</span></label>
+          <label class="opt"><input type="radio" name="cloacas" value="Pozo ciego" onchange="handleOpt(this)"><span>Pozo ciego / cámara</span></label>
+          <label class="opt"><input type="radio" name="cloacas" value="Sin saneamiento" onchange="handleOpt(this)"><span>Sin saneamiento</span></label>
+        </div>
+      </div>
+      <div id="convivientes_container" style="margin-top:14px"></div>
+    </div>
+  </div>
+
+  <!-- ─── SECCIÓN 7 ─── -->
+  <div class="section" id="sec7">
+    <div class="card">
+      <div class="card-title"><span class="ico">📋</span> Cierre — derivaciones y acciones</div>
+      <div class="fg"><label class="lbl">Derivaciones sugeridas</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="derivacion" value="Asistencia Municipal/CIC" onchange="handleOpt(this)"><span>Asistencia Municipal / CIC</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Médico/a clínico/a" onchange="handleOpt(this)"><span>Médico/a clínico/a</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Cardiología" onchange="handleOpt(this)"><span>Cardiología</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Endocrinología" onchange="handleOpt(this)"><span>Endocrinología</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Ginecología" onchange="handleOpt(this)"><span>Ginecología</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Salud mental" onchange="handleOpt(this)"><span>Salud mental</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="CPA / Consumo" onchange="handleOpt(this)"><span>CPA / Consumo</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Oncología" onchange="handleOpt(this)"><span>Oncología</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Odontología" onchange="handleOpt(this)"><span>Odontología</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Trabajo social" onchange="handleOpt(this)"><span>Trabajo social</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="PROGRESAR/SUMAR" onchange="handleOpt(this)"><span>PROGRESAR / SUMAR</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Urgencia — hoy" onchange="handleOpt(this)"><span>⚠ Urgencia — hoy</span></label>
+          <label class="opt"><input type="checkbox" name="derivacion" value="Sin derivación" onchange="handleOpt(this)"><span>Sin derivación</span></label>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">Urgencia</label>
+          <select id="urgencia_der"><option value="">Seleccionar</option><option>Inmediata (hoy)</option><option>En la semana</option><option>En el mes</option><option>Seguimiento habitual</option><option>No requiere</option></select>
+        </div>
+        <div class="fg"><label class="lbl">Turno asignado</label>
+          <div class="opts" style="margin-top:4px">
+            <label class="opt"><input type="radio" name="turno" value="Sí" onchange="handleOpt(this)"><span>Sí</span></label>
+            <label class="opt"><input type="radio" name="turno" value="No" onchange="handleOpt(this)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="turno" value="Sin turno (concurrir)" onchange="handleOpt(this)"><span>Concurrir sin turno</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Material entregado</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="material" value="Folletería" onchange="handleOpt(this)"><span>Folletería</span></label>
+          <label class="opt"><input type="checkbox" name="material" value="Preservativos" onchange="handleOpt(this)"><span>Preservativos</span></label>
+          <label class="opt"><input type="checkbox" name="material" value="Info Asistencia Municipal/CIC" onchange="handleOpt(this)"><span>Info Asistencia Municipal/CIC</span></label>
+          <label class="opt"><input type="checkbox" name="material" value="Medicación" onchange="handleOpt(this)"><span>Medicación</span></label>
+          <label class="opt"><input type="checkbox" name="material" value="Ninguno" onchange="handleOpt(this)"><span>Ninguno</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Observaciones generales</label><textarea id="obs_general" placeholder="Notas clínicas, contexto social, alertas..."></textarea></div>
+    </div>
+
+    <!-- ESTADO DE ENVÍO -->
+    <div id="sendStatus" class="hidden" style="margin-bottom:12px"></div>
+
+    <!-- BOTÓN GUARDAR -->
+    <button class="btn btn-pri" style="width:100%;font-size:16px;padding:14px;" onclick="guardarRegistro()">
+      Guardar y enviar a Google Sheets
+    </button>
+    <button class="btn btn-sec" style="width:100%;margin-top:8px;" onclick="nuevoRegistro()">
+      Nuevo registro
+    </button>
+  </div>
+
+</div><!-- /content -->
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="btn btn-sec" id="btnPrev" onclick="navigate(-1)" style="display:none">← Anterior</button>
+  <div class="nav-info" id="navInfo"><strong>1 / 7</strong>Operativo y datos personales</div>
+  <button class="btn btn-pri" id="btnNext" onclick="navigate(1)">Siguiente →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ──── CONFIGURACIÓN ────
+// Sheet ID hardcodeado — CEM Municipalidad de Esquina
+const SHEET_ID = '15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8';
+// La URL del Apps Script debe ser generada una sola vez y pegada aquí.
+// Estructura: https://script.google.com/macros/s/[DEPLOYMENT_ID]/exec
+// Apps Script publicado — URL activa:
+let SHEET_URL = 'https://script.google.com/macros/s/AKfycbwRDLsT2KoKJzh5sNx77nTx6auTPXplW5xGHmmktAD-99Pr4HflVaVlmF925bNlcWe8DA/exec';
+function toggleInstr(e){ e.preventDefault(); }
+
+// ──── NAVEGACIÓN ────
+let current = 1; const total = 7;
+const stepNames = ['Operativo y datos','Mediciones','Condiciones de salud','Salud mental','Cobertura','Grupo familiar','Cierre'];
+function navigate(dir){
+  document.getElementById('sec'+current).classList.remove('active');
+  current = Math.max(1, Math.min(total, current + dir));
+  document.getElementById('sec'+current).classList.add('active');
+  document.getElementById('navInfo').innerHTML = '<strong>'+current+' / '+total+'</strong>'+stepNames[current-1];
+  document.getElementById('progressLabel').innerHTML = '<strong>Paso '+current+'</strong> de '+total+' — '+stepNames[current-1];
+  document.getElementById('btnPrev').style.display = current > 1 ? '' : 'none';
+  const btn = document.getElementById('btnNext');
+  if(current === total){ btn.textContent = 'Guardar ↑'; btn.onclick = guardarRegistro; }
+  else { btn.textContent = 'Siguiente →'; btn.onclick = () => navigate(1); }
+  document.querySelectorAll('.ps').forEach((s,i) => {
+    s.classList.remove('active','done');
+    if(i < current-1) s.classList.add('done');
+    else if(i === current-1) s.classList.add('active');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ──── OPT PILLS ────
+function handleOpt(input){
+  const group = input.closest('.opts');
+  if(!group) return;
+  if(input.type === 'radio'){
+    group.querySelectorAll('.opt').forEach(o => o.classList.remove('checked'));
+    input.closest('.opt').classList.toggle('checked', input.checked);
+  } else {
+    input.closest('.opt').classList.toggle('checked', input.checked);
+  }
+}
+
+// ──── UTILIDADES ────
+function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function radVal(name){ const el = document.querySelector('input[name="'+name+'"]:checked'); return el ? el.value : ''; }
+function chkVals(name){ return [...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).join(', '); }
+function toggleShow(id, show){ const el = document.getElementById(id); if(el) el.classList.toggle('hidden', !show); }
+function toggleMed(key, show){ toggleShow('med_'+key, show); }
+function toggleMedCheck(name, blockId){
+  const any = [...document.querySelectorAll('input[name="'+name+'"]:checked')].some(x => x.value !== 'Ninguna' && x.value !== 'No');
+  toggleShow(blockId, any);
+}
+function toggleSust(key, show){ toggleShow('d_'+key, show); }
+function toggleEmbarazo(){ toggleShow('embarazo_block', radVal('embarazo')==='Sí'); }
+function toggleGineco(){ toggleShow('gineco_block', document.getElementById('sexo').value==='Femenino'); }
+
+// ──── FECHA Y EDAD ────
+document.getElementById('h_fecha').value = new Date().toISOString().split('T')[0];
+function calcEdad(){
+  const f = new Date(val('fnac')); const h = new Date();
+  let e = h.getFullYear()-f.getFullYear();
+  if(h.getMonth()-f.getMonth()<0||(h.getMonth()-f.getMonth()===0&&h.getDate()<f.getDate()))e--;
+  if(e>=0&&e<=120){ document.getElementById('edad').value=e; updateFINDRISC(); }
+}
+
+// ──── GPS ────
+function getGeo(){
+  const s = document.getElementById('geo_status');
+  s.textContent='Obteniendo ubicación...';
+  if(!navigator.geolocation){s.textContent='Geolocalización no disponible.';return;}
+  navigator.geolocation.getCurrentPosition(
+    p => { document.getElementById('geo_lat').value=p.coords.latitude.toFixed(6); document.getElementById('geo_lon').value=p.coords.longitude.toFixed(6); s.textContent='✓ Ubicación capturada correctamente.'; },
+    () => { s.textContent='No se pudo obtener la ubicación. Verificá los permisos del navegador.'; }
+  );
+}
+
+// ──── CLÍNICA ────
+function calcBMI(){
+  const p=parseFloat(val('peso')), t=parseFloat(val('talla'))/100;
+  const box=document.getElementById('bmiBox');
+  if(!p||!t){box.classList.add('hidden');return;}
+  const b=p/(t*t); let lbl='',cls='';
+  if(b<18.5){lbl='Bajo peso';cls='alert-y';}else if(b<25){lbl='Normopeso';cls='alert-g';}
+  else if(b<30){lbl='Sobrepeso';cls='alert-y';}else if(b<35){lbl='Obesidad I';cls='alert-r';}
+  else if(b<40){lbl='Obesidad II';cls='alert-r';}else{lbl='Obesidad III';cls='alert-r';}
+  document.getElementById('bmiVal').textContent=b.toFixed(1);
+  document.getElementById('bmiLabel').textContent=lbl;
+  document.getElementById('bmiAlert').innerHTML='<div class="alert '+cls+'">'+lbl+'</div>';
+  box.classList.remove('hidden');
+}
+function checkTA(){
+  const s=parseInt(val('ta_sis')),d=parseInt(val('ta_dia')),el=document.getElementById('taAlert');
+  if(!s||!d){el.innerHTML='';return;}
+  let msg='',cls='';
+  if(s>=180||d>=120){msg='⚠ Hipertensión severa — evaluar urgencia';cls='alert-r';}
+  else if(s>=140||d>=90){msg='Tensión elevada — Hipertensión';cls='alert-y';}
+  else if(s<90||d<60){msg='Tensión baja — Hipotensión';cls='alert-y';}
+  else{msg='Tensión arterial normal';cls='alert-g';}
+  el.innerHTML='<div class="alert '+cls+'">'+msg+'</div>';
+}
+function checkGluc(){
+  const g=parseInt(val('glucemia')),el=document.getElementById('glucAlert');
+  if(!g){el.innerHTML='';return;}
+  const ayunas=radVal('glucond')!=='Postprandial';
+  let msg='',cls='';
+  if(ayunas){
+    if(g>=126){msg='Glucemia en ayunas elevada — presuntivo diabetes';cls='alert-r';}
+    else if(g>=100){msg='Glucemia alterada — prediabetes posible';cls='alert-y';}
+    else{msg='Glucemia en ayunas normal';cls='alert-g';}
+  }else{
+    if(g>=200){msg='Glucemia postprandial muy elevada';cls='alert-r';}
+    else if(g>=140){msg='Glucemia postprandial elevada';cls='alert-y';}
+    else{msg='Glucemia postprandial normal';cls='alert-g';}
+  }
+  el.innerHTML='<div class="alert '+cls+'">'+msg+'</div>';
+}
+
+// ──── FINDRISC ────
+function updateFINDRISC(){
+  let sc=0;
+  const edad=parseInt(val('edad'))||0;
+  if(edad>=45&&edad<=54)sc+=2; else if(edad>=55&&edad<=64)sc+=3; else if(edad>=65)sc+=4;
+  const p=parseFloat(val('peso')),t=parseFloat(val('talla'))/100;
+  if(p>0&&t>0){const b=p/(t*t);if(b>=25&&b<30)sc+=1;else if(b>=30)sc+=3;}
+  const pa=parseFloat(val('periabd'));
+  if(pa>0){const f=document.getElementById('sexo').value==='Femenino';
+    if(f&&pa>=80&&pa<88)sc+=3;else if(f&&pa>=88)sc+=4;
+    else if(!f&&pa>=94&&pa<102)sc+=3;else if(!f&&pa>=102)sc+=4;}
+  const sis=parseInt(val('ta_sis')); if(sis>=140)sc+=2;
+  const g=parseInt(val('glucemia')); if(g>=100)sc+=5;
+  const af=radVal('ant_fam'); sc+=parseInt(af)||0;
+  document.getElementById('findrisc_val').textContent=sc;
+  let lbl='',cls='';
+  if(sc<7){lbl='Riesgo bajo (~1%)';cls='alert-g';}
+  else if(sc<12){lbl='Riesgo levemente elevado (~4%)';cls='alert-g';}
+  else if(sc<15){lbl='Riesgo moderado (~17%)';cls='alert-y';}
+  else if(sc<20){lbl='Riesgo alto (~33%)';cls='alert-r';}
+  else{lbl='Riesgo muy alto (~50%)';cls='alert-r';}
+  document.getElementById('findrisc_label').textContent=lbl;
+  document.getElementById('findrisc_alert').innerHTML='<div class="alert '+cls+'">'+lbl+'</div>';
+  document.getElementById('findrisc_box').classList.remove('hidden');
+}
+
+// ──── CONVIVIENTES ────
+function updateConvivientes(){
+  let n=parseInt(val('n_hogar'))||0;
+  if(n>7){n=7;document.getElementById('n_hogar').value=7;}
+  const convs=Math.min(n-1,6);
+  const cont=document.getElementById('convivientes_container');
+  cont.innerHTML='';
+  if(convs<=0) return;
+  cont.innerHTML='<div style="font-size:12px;color:var(--gris-texto);margin-bottom:10px">Completá los datos de cada conviviente. Los campos vacíos quedan en blanco en la planilla.</div>';
+  for(let i=1;i<=convs;i++){
+    cont.innerHTML+=`
+    <div class="conv-card">
+      <div class="conv-title">Conviviente ${i} de ${convs}</div>
+      <div class="g3">
+        <div class="fg"><label class="lbl">Vínculo</label><input type="text" id="cv_vinculo_${i}" placeholder="Ej: hijo/a, pareja, madre..."></div>
+        <div class="fg"><label class="lbl">Edad</label><input type="number" id="cv_edad_${i}" min="0" max="120"></div>
+        <div class="fg"><label class="lbl">Género</label>
+          <select id="cv_genero_${i}"><option value="">Sel.</option><option>Femenino</option><option>Masculino</option><option>No binario/X</option></select>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Condición general de salud</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="cv_salud_${i}" value="Buena" onchange="handleOpt(this)"><span>Buena</span></label>
+          <label class="opt"><input type="radio" name="cv_salud_${i}" value="Regular" onchange="handleOpt(this)"><span>Regular</span></label>
+          <label class="opt"><input type="radio" name="cv_salud_${i}" value="Mala" onchange="handleOpt(this)"><span>Mala</span></label>
+          <label class="opt"><input type="radio" name="cv_salud_${i}" value="No sabe" onchange="handleOpt(this)"><span>No sabe</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Condiciones crónicas diagnosticadas</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="HTA" onchange="handleOpt(this)"><span>HTA</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Diabetes" onchange="handleOpt(this)"><span>Diabetes</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Obesidad" onchange="handleOpt(this)"><span>Obesidad</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Asma/EPOC" onchange="handleOpt(this)"><span>Asma/EPOC</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Cardiopatía" onchange="handleOpt(this)"><span>Cardiopatía</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Oncológica" onchange="handleOpt(this)"><span>Oncológica</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Otra" onchange="handleOpt(this)"><span>Otra</span></label>
+          <label class="opt"><input type="checkbox" name="cv_cron_${i}" value="Ninguna" onchange="handleOpt(this)"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Condiciones de salud mental</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="cv_sm_${i}" value="Depresión/Ansiedad" onchange="handleOpt(this)"><span>Depresión/Ansiedad</span></label>
+          <label class="opt"><input type="checkbox" name="cv_sm_${i}" value="Consumo problemático" onchange="handleOpt(this)"><span>Consumo problemático</span></label>
+          <label class="opt"><input type="checkbox" name="cv_sm_${i}" value="Otra condición mental" onchange="handleOpt(this)"><span>Otra</span></label>
+          <label class="opt"><input type="checkbox" name="cv_sm_${i}" value="Ninguna" onchange="handleOpt(this)"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="fg"><label class="lbl">CUD (Certificado de Discapacidad)</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="cv_cud_${i}" value="No" onchange="handleOpt(this)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="cv_cud_${i}" value="Sí, vigente" onchange="handleOpt(this)"><span>Sí, vigente</span></label>
+            <label class="opt"><input type="radio" name="cv_cud_${i}" value="En trámite" onchange="handleOpt(this)"><span>En trámite</span></label>
+            <label class="opt"><input type="radio" name="cv_cud_${i}" value="Vencido" onchange="handleOpt(this)"><span>Vencido</span></label>
+          </div>
+        </div>
+        <div class="fg"><label class="lbl">Consulta médica último año</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="cv_ctrl_${i}" value="Sí" onchange="handleOpt(this)"><span>Sí</span></label>
+            <label class="opt"><input type="radio" name="cv_ctrl_${i}" value="No" onchange="handleOpt(this)"><span>No</span></label>
+            <label class="opt"><input type="radio" name="cv_ctrl_${i}" value="No sabe" onchange="handleOpt(this)"><span>No sabe</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="fg"><label class="lbl">Observaciones</label><textarea id="cv_obs_${i}" placeholder="Necesidades especiales, alertas..."></textarea></div>
+    </div>`;
+  }
+}
+
+// ──── TOAST ────
+function showToast(msg, duration=3000){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
+}
+
+// ──── RECOLECCIÓN DE DATOS ────
+function collectData(){
+  const nHogar=parseInt(val('n_hogar'))||0;
+  const convData = {};
+  for(let i=1;i<=6;i++){
+    const p = 'c'+i+'_';
+    convData[p+'vinculo']  = val('cv_vinculo_'+i);
+    convData[p+'edad']     = val('cv_edad_'+i);
+    convData[p+'genero']   = val('cv_genero_'+i)  || (document.getElementById('cv_genero_'+i) ? '' : '');
+    convData[p+'salud']    = radVal('cv_salud_'+i);
+    convData[p+'cronicas'] = chkVals('cv_cron_'+i);
+    convData[p+'sm']       = chkVals('cv_sm_'+i);
+    convData[p+'cud']      = radVal('cv_cud_'+i);
+    convData[p+'ctrl']     = radVal('cv_ctrl_'+i);
+    convData[p+'obs']      = val('cv_obs_'+i);
+  }
+  return {
+    timestamp: new Date().toISOString(),
+    barrio: val('h_barrio'), fecha: val('h_fecha'), profesional: val('h_prof'), nroRegistro: val('h_nro'),
+    geoLat: val('geo_lat'), geoLon: val('geo_lon'), geoRef: val('geo_ref'),
+    apellido: val('apellido'), nombre: val('nombre'), dni: val('dni'),
+    fnac: val('fnac'), edad: val('edad'), sexo: val('sexo'), genero: val('genero'),
+    dir: val('dir'), tel: val('tel'), escolaridad: val('escolaridad'), laboral: val('laboral'),
+    embarazo: radVal('embarazo'), semanas: val('semanas'), ngest: val('ngest'), npartos: val('npartos'),
+    ctrlPren: radVal('ctrl_pren'), sumarEmb: radVal('sumar_emb'),
+    vacGripeEmb: val('vac_gripe_emb'), vacDtpa: val('vac_dtpa'),
+    compEmb: chkVals('comp_emb'), obsEmb: val('obs_emb'),
+    peso: val('peso'), talla: val('talla'), periabd: val('periabd'),
+    bmi: (()=>{const p=parseFloat(val('peso')),t=parseFloat(val('talla'))/100;return(p&&t)?(p/(t*t)).toFixed(1):'';})(),
+    taSis: val('ta_sis'), taDia: val('ta_dia'), glucemia: val('glucemia'), glucond: radVal('glucond'),
+    fc: val('fc'), temp: val('temp'), spo2: val('spo2'),
+    findrisc: document.getElementById('findrisc_val').textContent,
+    findriscCategoria: document.getElementById('findrisc_label').textContent,
+    hta: radVal('hta'), htaMed: val('hta_med'), htaAdh: radVal('hta_adh'),
+    dbts: radVal('dbts'), dbtsMed: val('dbts_med'), dbtsAdh: radVal('dbts_adh'),
+    cv: chkVals('cv'), cvMed: val('cv_med'), cvAdh: radVal('cv_adh'),
+    resp: chkVals('resp'), respMed: val('resp_med'), respAdh: radVal('resp_adh'),
+    onco: radVal('onco'), oncoTipo: val('onco_tipo'), oncoTto: val('onco_tto'),
+    its: chkVals('its'), itsTto: val('its_tto'), itsMed: val('its_med'), itsAdh: radVal('its_adh'),
+    antFamDbts: radVal('ant_fam'), otrasEnf: val('otras_enf'), otrasMed: val('otras_med'),
+    ultimaConsulta: val('ultima_consulta'),
+    pap: radVal('pap'), papRes: radVal('pap_res'), mamo: radVal('mamo'),
+    ultGineco: val('ult_gineco'), mac: chkVals('mac'),
+    smRef: radVal('sm_ref'), smDx: chkVals('sm_dx'), smTto: radVal('sm_tto'), smRiesgo: chkVals('sm_riesgo'),
+    sTabaco: radVal('s_tabaco'), fTabaco: val('f_tabaco'), cTabaco: val('c_tabaco'), rTabaco: radVal('r_tabaco'),
+    sAlcohol: radVal('s_alcohol'), fAlcohol: val('f_alcohol'), cAlcohol: val('c_alcohol'),
+    alcDep: radVal('alc_dep'), rAlcohol: radVal('r_alcohol'),
+    sCannabis: radVal('s_cannabis'), fCannabis: val('f_cannabis'), rCannabis: radVal('r_cannabis'),
+    sCocaina: radVal('s_cocaina'), fCocaina: val('f_cocaina'), cCocaina: val('c_cocaina'),
+    sPsico: radVal('s_psico'), cPsico: val('c_psico'), obsSM: val('obs_sm'),
+    cobertura: radVal('cobertura'), osNombre: val('os_nombre'),
+    acceso: chkVals('acceso'), barrera: chkVals('barrera'), vacunas: radVal('vacunas'),
+    odonto: radVal('odonto'), odoUlt: val('odonto_ult'), odoMotivo: val('odonto_motivo'),
+    nHogar: val('n_hogar'), nMenores: val('n_menores'),
+    vivienda: val('vivienda'), agua: val('agua'), cloacas: radVal('cloacas'),
+    ...convData,
+    derivaciones: chkVals('derivacion'), urgenciaDer: val('urgencia_der'),
+    turno: radVal('turno'), material: chkVals('material'), obsGeneral: val('obs_general')
+  };
+}
+
+// ──── VALIDAR URL ────
+function validateUrl(){ /* URL hardcodeada — no se necesita validación manual */ }
+
+// ──── GUARDAR / ENVIAR ────
+async function guardarRegistro(){
+  const data = collectData();
+  const statusEl = document.getElementById('sendStatus');
+  statusEl.className='card';
+  statusEl.classList.remove('hidden');
+
+  if(!SHEET_URL){
+    statusEl.innerHTML='<div class="alert alert-y">⚠ Configurá la URL de Google Sheets arriba para enviar los datos. El registro se guardó localmente.</div>';
+    const local = JSON.parse(localStorage.getItem('registros_operativo')||'[]');
+    local.push(data); localStorage.setItem('registros_operativo', JSON.stringify(local));
+    showToast('Guardado localmente ('+local.length+' registros)');
+    return;
+  }
+
+  statusEl.innerHTML='<div class="alert alert-b">Enviando registro...</div>';
+  try {
+    await fetch(SHEET_URL, {
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    statusEl.innerHTML='<div class="alert alert-g">✓ Registro enviado correctamente a Google Sheets.</div>';
+    showToast('✓ Enviado a Google Sheets');
+    const local = JSON.parse(localStorage.getItem('registros_operativo')||'[]');
+    local.push({...data, enviado:true}); localStorage.setItem('registros_operativo', JSON.stringify(local));
+  } catch(e) {
+    statusEl.innerHTML='<div class="alert alert-r">Error al enviar. Registro guardado localmente (se puede reenviar).</div>';
+    const local = JSON.parse(localStorage.getItem('registros_operativo')||'[]');
+    local.push({...data, enviado:false}); localStorage.setItem('registros_operativo', JSON.stringify(local));
+  }
+}
+
+function nuevoRegistro(){
+  {
+    document.querySelectorAll('input[type=text],input[type=number],input[type=date],input[type=tel],textarea').forEach(el=>{
+      if(el.id!=='geo_lat'&&el.id!=='geo_lon')el.value='';
+    });
+    document.querySelectorAll('input[type=radio]').forEach(r=>{if(r.defaultChecked)r.checked=true;});
+    document.querySelectorAll('input[type=checkbox]').forEach(c=>{c.checked=false;});
+    document.querySelectorAll('.opt').forEach(o=>o.classList.remove('checked'));
+    document.querySelectorAll('input[type=radio]:checked').forEach(r=>r.closest('.opt')&&r.closest('.opt').classList.add('checked'));
+    document.querySelectorAll('[id^="med_"],[id^="d_"],.sub-card').forEach(el=>{
+      if(!['med_hta','med_dbts','med_cv','med_resp','its_block','onco_tto_block'].includes(el.id)) return;
+      el.classList.add('hidden');
+    });
+    document.getElementById('embarazo_block').classList.add('hidden');
+    document.getElementById('gineco_block').classList.add('hidden');
+    document.getElementById('odonto_blk').classList.add('hidden');
+    document.getElementById('sendStatus').classList.add('hidden');
+    document.getElementById('convivientes_container').innerHTML='';
+    document.getElementById('bmiBox').classList.add('hidden');
+    document.getElementById('taAlert').innerHTML='';
+    document.getElementById('glucAlert').innerHTML='';
+    current=1; navigate(0);
+    // increment nro
+    const nro = parseInt(document.getElementById('h_nro').value)||0;
+    document.getElementById('h_nro').value = nro+1;
+    document.getElementById('nroDisplay').textContent='#'+(nro+1);
+    document.getElementById('h_fecha').value=new Date().toISOString().split('T')[0];
+    window.scrollTo({top:0});
+  }
+}
+</script>
+
+<!--
+════════════════════════════════════════════════════════════════
+  OPERATIVO DE SALUD BARRIAL — Google Apps Script
+  
+  INSTRUCCIONES:
+  1. Abrí tu Google Sheet (ID: 15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8)
+     → https://docs.google.com/spreadsheets/d/15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8/edit
+  2. Menú: Extensiones → Apps Script
+  3. Borrá TODO el código existente
+  4. Pegá este bloque completo (desde "// ====" hasta el último "}")
+  5. Guardá (Ctrl+S)
+  6. Implementar → Nueva implementación → Aplicación web
+     - Descripción: Operativo Salud v1
+     - Ejecutar como: Yo (tu cuenta)
+     - Quién tiene acceso: Cualquier usuario
+  7. Copiá la URL generada → abrí el HTML → buscá "https://script.google.com/macros/s/AKfycbwRDLsT2KoKJzh5sNx77nTx6auTPXplW5xGHmmktAD-99Pr4HflVaVlmF925bNlcWe8DA/exec"
+     y reemplazalo por el ID de implementación
+════════════════════════════════════════════════════════════════
+
+// ============================================================
+//  OPERATIVO DE SALUD BARRIAL — Google Apps Script
+//  Planilla destino: 15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8
+// ============================================================
+
+var HEADERS = [
+  // ── Metadatos del operativo ──
+  "timestamp", "barrio", "fecha", "profesional", "nroRegistro",
+  "geoLat", "geoLon", "geoRef",
+  // ── Datos personales ──
+  "apellido", "nombre", "dni", "fnac", "edad", "sexo", "genero",
+  "dir", "tel", "escolaridad", "laboral",
+  // ── Embarazo ──
+  "embarazo", "semanas", "ngest", "npartos", "ctrlPren", "sumarEmb",
+  "vacGripeEmb", "vacDtpa", "compEmb", "obsEmb",
+  // ── Mediciones clínicas ──
+  "peso", "talla", "periabd", "bmi", "taSis", "taDia",
+  "glucemia", "glucond", "fc", "temp", "spo2",
+  "findrisc", "findriscCategoria",
+  // ── HTA ──
+  "hta", "htaMed", "htaAdh",
+  // ── Diabetes ──
+  "dbts", "dbtsMed", "dbtsAdh",
+  // ── Cardiovascular ──
+  "cv", "cvMed", "cvAdh",
+  // ── Respiratorio ──
+  "resp", "respMed", "respAdh",
+  // ── Oncología ──
+  "onco", "oncoTipo", "oncoTto",
+  // ── ITS ──
+  "its", "itsTto", "itsMed", "itsAdh",
+  // ── Otros antecedentes ──
+  "antFamDbts", "otrasEnf", "otrasMed", "ultimaConsulta",
+  // ── Controles ginecológicos ──
+  "pap", "papRes", "mamo", "ultGineco", "mac",
+  // ── Salud mental ──
+  "smRef", "smDx", "smTto", "smRiesgo",
+  // ── Consumo de sustancias ──
+  "sTabaco", "fTabaco", "cTabaco", "rTabaco",
+  "sAlcohol", "fAlcohol", "cAlcohol", "alcDep", "rAlcohol",
+  "sCannabis", "fCannabis", "rCannabis",
+  "sCocaina", "fCocaina", "cCocaina",
+  "sPsico", "cPsico", "obsSM",
+  // ── Cobertura y acceso ──
+  "cobertura", "osNombre", "acceso", "barrera", "vacunas",
+  "odonto", "odoUlt", "odoMotivo",
+  // ── Vivienda / hogar ──
+  "nHogar", "nMenores", "vivienda", "agua", "cloacas",
+  // ── Convivientes (1–6) ──
+  "c1_vinculo","c1_edad","c1_genero","c1_salud","c1_cronicas","c1_sm","c1_cud","c1_ctrl","c1_obs",
+  "c2_vinculo","c2_edad","c2_genero","c2_salud","c2_cronicas","c2_sm","c2_cud","c2_ctrl","c2_obs",
+  "c3_vinculo","c3_edad","c3_genero","c3_salud","c3_cronicas","c3_sm","c3_cud","c3_ctrl","c3_obs",
+  "c4_vinculo","c4_edad","c4_genero","c4_salud","c4_cronicas","c4_sm","c4_cud","c4_ctrl","c4_obs",
+  "c5_vinculo","c5_edad","c5_genero","c5_salud","c5_cronicas","c5_sm","c5_cud","c5_ctrl","c5_obs",
+  "c6_vinculo","c6_edad","c6_genero","c6_salud","c6_cronicas","c6_sm","c6_cud","c6_ctrl","c6_obs",
+  // ── Cierre y derivaciones ──
+  "derivaciones", "urgenciaDer", "turno", "material", "obsGeneral"
+];
+
+// ============================================================
+//  doPost — recibe cada registro del formulario
+// ============================================================
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.openById("15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8").getActiveSheet();
+    var data  = JSON.parse(e.postData.contents);
+
+    // Primera vez: crear encabezados con formato CEM
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(HEADERS);
+      var hRange = sheet.getRange(1, 1, 1, HEADERS.length);
+      hRange.setFontWeight('bold');
+      hRange.setBackground('#0F2744');
+      hRange.setFontColor('#ffffff');
+      hRange.setFontSize(11);
+      sheet.setFrozenRows(1);
+    }
+
+    // Armar la fila en el orden exacto de HEADERS
+    var row = HEADERS.map(function(key) {
+      var v = data[key];
+      return (v !== undefined && v !== null) ? v : '';
+    });
+
+    sheet.appendRow(row);
+
+    // Formatear timestamp como fecha legible (col 1)
+    var lastRow = sheet.getLastRow();
+    sheet.getRange(lastRow, 1).setNumberFormat('dd/mm/yyyy hh:mm');
+
+    // Auto-ajustar primeras 8 columnas (metadatos + nombre)
+    sheet.autoResizeColumns(1, 8);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'ok', fila: lastRow }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', mensaje: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ============================================================
+//  doGet — verifica que el script esté publicado correctamente
+//  Abrí la URL del web app en el navegador para comprobar
+// ============================================================
+function doGet(e) {
+  return ContentService
+    .createTextOutput('CEM Esquina — Operativo de Salud Barrial — Apps Script activo ✓')
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+════════════════════════════════════════════════════════════════
+-->
+</body>
+</html>
