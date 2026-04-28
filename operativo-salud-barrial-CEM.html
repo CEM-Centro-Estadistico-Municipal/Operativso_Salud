@@ -7,192 +7,383 @@
 <title>Operativo de Salud Barrial — CEM Esquina</title>
 <style>
   :root {
-    --verde: #0F2744;
-    --verde-claro: #E8EEF4;
-    --verde-medio: #1A3D5C;
-    --gris-bg: #F4F7FA;
-    --gris-borde: #C8D6E2;
-    --gris-texto: #5A7387;
-    --rojo: #E05C4A;
-    --amarillo: #F5C842;
-    --azul-esquina: #3AAEE0;
-    --verde-cem: #6CBF6A;
-    --texto: #1A2D3D;
+    /* ── Paleta CEM Esquina (Design System) ── */
+    /* Azul institucional (escala) */
+    --cem-azul-50:  #eaf1f9;
+    --cem-azul-100: #cfdff0;
+    --cem-azul-200: #a4c2e1;
+    --cem-azul-300: #6fa1d0;
+    --cem-azul-500: #1f78c1;
+    --cem-azul-600: #1568ad;
+    --cem-azul-700: #0e5a9e;   /* tono base del logo */
+    --cem-azul-800: #0a4178;
+    --cem-azul-900: #062b51;
+    /* Ocre dorado (acento cálido) */
+    --cem-ocre-100: #f3e6cf;
+    --cem-ocre-300: #ddb87a;
+    --cem-ocre-500: #b8863d;
+    --cem-ocre-700: #8c632a;
+    /* Papel y tinta (neutros cálidos) */
+    --cem-papel:    #f8f5ee;
+    --cem-papel-2:  #eee6d5;
+    --cem-papel-3:  #fffcf5;
+    --cem-tinta:    #171614;
+    --cem-tinta-2:  #3a3631;
+    --cem-tinta-3:  #6c655c;
+    --cem-borde:    #d9d2c0;
+    --cem-borde-2:  #ebe5d3;
+    /* Semánticos (saturación baja — son datos, no alarmas) */
+    --cem-ok:       #2f7d32;
+    --cem-ok-bg:    #e6f0e6;
+    --cem-warn:     #c9971a;
+    --cem-warn-bg:  #faf1d8;
+    --cem-alert:    #a8322c;
+    --cem-alert-bg: #f7e3e1;
+    /* Aliases para mantener compatibilidad con el código existente */
+    --verde:        var(--cem-azul-700);   /* primario / títulos */
+    --verde-claro:  var(--cem-azul-50);    /* fondos suaves de selección */
+    --verde-medio:  var(--cem-azul-600);
+    --gris-bg:      var(--cem-papel);
+    --gris-borde:   var(--cem-borde);
+    --gris-texto:   var(--cem-tinta-3);
+    --rojo:         var(--cem-alert);
+    --amarillo:     var(--cem-warn);
+    --azul-esquina: var(--cem-ocre-500);   /* acento — ahora ocre */
+    --verde-cem:    var(--cem-ok);
+    --texto:        var(--cem-tinta);
+    /* Tokens de UI */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-pill: 999px;
+    --shadow-1: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.06);
+    --shadow-2: 0 4px 12px rgba(15,23,42,.08);
+    --shadow-3: 0 12px 32px rgba(15,23,42,.12);
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    /* Tipografía: se mantiene Barlow */
     --font: 'Barlow', system-ui, sans-serif;
     --font-title: 'Barlow Condensed', system-ui, sans-serif;
     --font-mono: 'DM Mono', monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font); background: var(--gris-bg); color: var(--texto); font-size: 15px; }
+  body {
+    font-family: var(--font);
+    background: var(--cem-papel);
+    color: var(--cem-tinta);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'tnum';
+  }
 
   /* HEADER */
   .app-header {
-    background: var(--verde);
+    background: var(--cem-azul-700);
     color: white;
     padding: 14px 16px;
     position: sticky; top: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-    border-bottom: 3px solid var(--azul-esquina);
+    box-shadow: var(--shadow-2);
+    border-bottom: 3px solid var(--cem-ocre-500);
   }
   .app-header h1 { font-size: 18px; font-weight: 800; font-family: var(--font-title); letter-spacing: .03em; text-transform: uppercase; }
-  .app-header .sub { font-size: 11px; opacity: 0.75; margin-top: 2px; font-family: var(--font); font-weight: 400; letter-spacing: .02em; text-transform: uppercase; }
-  .badge-nro { background: var(--azul-esquina); border-radius: 6px; padding: 4px 12px; font-size: 13px; font-weight: 600; font-family: var(--font-mono); letter-spacing: .05em; }
+  .app-header .sub { font-size: 11px; opacity: 0.78; margin-top: 2px; font-family: var(--font); font-weight: 400; letter-spacing: .02em; text-transform: uppercase; }
+  .badge-nro {
+    background: var(--cem-ocre-500);
+    color: white;
+    border-radius: var(--radius-sm);
+    padding: 4px 12px;
+    font-size: 13px; font-weight: 600;
+    font-family: var(--font-mono); letter-spacing: .05em;
+  }
 
   /* PROGRESS */
-  .progress-wrap { background: white; border-bottom: 1px solid var(--gris-borde); padding: 10px 16px; }
+  .progress-wrap { background: var(--cem-papel-3); border-bottom: 1px solid var(--cem-borde-2); padding: 10px 16px; }
   .progress-steps { display: flex; gap: 4px; margin-bottom: 6px; }
-  .ps { flex: 1; height: 4px; border-radius: 2px; background: var(--gris-borde); transition: background .25s; }
-  .ps.done { background: var(--verde); }
-  .ps.active { background: var(--azul-esquina); }
-  .progress-label { font-size: 12px; color: var(--gris-texto); }
-  .progress-label strong { color: var(--azul-esquina); }
+  .ps { flex: 1; height: 4px; border-radius: var(--radius-pill); background: var(--cem-borde-2); transition: background .25s var(--ease); }
+  .ps.done   { background: var(--cem-azul-700); }
+  .ps.active { background: var(--cem-ocre-500); }
+  .progress-label { font-size: 12px; color: var(--cem-tinta-3); }
+  .progress-label strong { color: var(--cem-azul-700); }
 
   /* CONTENT */
   .content { padding: 12px 16px 100px; max-width: 680px; margin: 0 auto; }
 
   /* CARDS */
   .card {
-    background: white; border-radius: 10px; border: 1px solid var(--gris-borde);
-    padding: 16px; margin-bottom: 12px;
+    background: var(--cem-papel-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--cem-borde-2);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow-1);
   }
   .card-title {
-    font-size: 14px; font-weight: 800; color: var(--verde);
+    font-size: 14px; font-weight: 800; color: var(--cem-azul-800);
     font-family: var(--font-title);
     text-transform: uppercase; letter-spacing: .08em;
-    margin-bottom: 14px; padding-bottom: 8px;
-    border-bottom: 2px solid var(--azul-esquina);
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 2px solid var(--cem-ocre-500);
     display: flex; align-items: center; gap: 8px;
   }
   .card-title .ico { font-size: 16px; }
   .sub-card {
-    background: var(--verde-claro); border-radius: 8px;
+    background: var(--cem-papel-2);
+    border-radius: var(--radius-md);
     padding: 12px 14px; margin: 10px 0;
-    border-left: 3px solid var(--verde-medio);
+    border: 1px solid var(--cem-borde-2);
+    border-left: 3px solid var(--cem-ocre-500);
   }
-  .sub-card-title { font-size: 13px; font-weight: 700; font-family: var(--font-title); color: var(--verde); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .sub-card-title {
+    font-size: 13px; font-weight: 700;
+    font-family: var(--font-title); color: var(--cem-azul-800);
+    margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em;
+  }
 
   /* FORM ELEMENTS */
   .fg { margin-bottom: 12px; }
   .fg:last-child { margin-bottom: 0; }
-  label.lbl { display: block; font-size: 13px; color: var(--gris-texto); margin-bottom: 4px; font-weight: 600; }
+  label.lbl {
+    display: block; font-size: 13px;
+    color: var(--cem-tinta-2); margin-bottom: 4px;
+    font-weight: 600;
+  }
   input[type=text], input[type=number], input[type=date], input[type=tel], select, textarea {
-    width: 100%; padding: 9px 11px;
-    border: 1px solid var(--gris-borde); border-radius: 7px;
-    font-size: 14px; font-family: var(--font); color: #222;
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--cem-borde); border-radius: var(--radius-sm);
+    font-size: 15px; font-family: var(--font); color: var(--cem-tinta);
     background: white; appearance: none;
     -webkit-appearance: none;
-    transition: border-color .15s;
+    transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
   }
+  input[type=number] { font-family: var(--font-mono); font-size: 14px; }
   input:focus, select:focus, textarea:focus {
-    outline: none; border-color: var(--verde-medio);
-    box-shadow: 0 0 0 3px rgba(45,138,80,0.12);
+    outline: none; border-color: var(--cem-azul-700);
+    box-shadow: 0 0 0 2px var(--cem-azul-100);
   }
-  textarea { resize: vertical; min-height: 60px; }
+  textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
   .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
   @media(max-width:480px) { .g3 { grid-template-columns: 1fr 1fr; } }
 
-  /* RADIO / CHECK */
+  /* RADIO / CHECK PILLS */
   .opts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
   .opt {
     display: flex; align-items: center; gap: 5px;
     font-size: 13px; cursor: pointer;
-    background: var(--gris-bg); border: 1px solid var(--gris-borde);
-    border-radius: 20px; padding: 5px 11px;
-    transition: all .15s; user-select: none;
+    background: var(--cem-papel-3);
+    border: 1px solid var(--cem-borde);
+    color: var(--cem-tinta-2);
+    border-radius: var(--radius-pill);
+    padding: 6px 12px;
+    transition: all .15s var(--ease); user-select: none;
   }
+  .opt:hover { border-color: var(--cem-azul-300); background: var(--cem-azul-50); }
   .opt input { display: none; }
-  .opt.checked { background: var(--verde-claro); border-color: var(--verde-medio); color: var(--verde); font-weight: 500; }
-  .opt input[type=radio]:checked ~ span,
-  .opt input[type=checkbox]:checked ~ span { color: var(--verde); }
+  .opt.checked {
+    background: var(--cem-azul-50);
+    border-color: var(--cem-azul-700);
+    color: var(--cem-azul-800);
+    font-weight: 500;
+    box-shadow: inset 0 0 0 1px var(--cem-azul-700);
+  }
 
-  /* ALERTS */
-  .alert { border-radius: 7px; padding: 8px 12px; font-size: 13px; margin-top: 6px; font-weight: 500; }
-  .alert-r { background: #fdecea; color: var(--rojo); border: 1px solid #f5c6c3; }
-  .alert-y { background: #fef3e2; color: #a04000; border: 1px solid #f9d5a7; }
-  .alert-g { background: var(--verde-claro); color: var(--verde); border: 1px solid #b2dfc2; }
-  .alert-b { background: #e8f0fe; color: #1a5276; border: 1px solid #b8cff5; }
+  /* ALERTS — semánticos DS, saturación baja */
+  .alert {
+    border-radius: var(--radius-sm);
+    padding: 9px 12px; font-size: 13px;
+    margin-top: 6px; font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .alert-r { background: var(--cem-alert-bg); color: var(--cem-alert); border-color: #e8b6b2; }
+  .alert-y { background: var(--cem-warn-bg);  color: #8a6a13;          border-color: #ecd99a; }
+  .alert-g { background: var(--cem-ok-bg);    color: var(--cem-ok);    border-color: #b5d3b6; }
+  .alert-b { background: var(--cem-azul-50);  color: var(--cem-azul-800); border-color: var(--cem-azul-200); }
 
   /* FINDRISC */
-  .findrisc-score { font-size: 32px; font-weight: 500; color: var(--verde); font-family: var(--font-mono); }
+  .findrisc-score { font-size: 36px; font-weight: 600; color: var(--cem-azul-800); font-family: var(--font-mono); letter-spacing: -.02em; }
   .findrisc-wrap { display: flex; align-items: baseline; gap: 10px; }
 
   /* CONVIVIENTE CARD */
   .conv-card {
-    border: 1px solid var(--gris-borde); border-radius: 8px;
-    padding: 12px 14px; margin-bottom: 10px; background: var(--gris-bg);
+    border: 1px solid var(--cem-borde-2);
+    border-radius: var(--radius-md);
+    padding: 12px 14px; margin-bottom: 10px;
+    background: var(--cem-papel);
   }
-  .conv-title { font-size: 13px; font-weight: 600; color: var(--verde-medio); margin-bottom: 10px; }
+  .conv-title { font-size: 13px; font-weight: 600; color: var(--cem-azul-700); margin-bottom: 10px; }
 
   /* HIDDEN */
   .hidden { display: none !important; }
 
   /* INFO BOX */
-  .info-box { background: var(--gris-bg); border-radius: 8px; padding: 10px 14px; margin-top: 8px; }
-  .info-big { font-size: 24px; font-weight: 500; color: var(--verde); font-family: var(--font-mono); }
+  .info-box {
+    background: var(--cem-azul-50);
+    border: 1px solid var(--cem-azul-100);
+    border-radius: var(--radius-md);
+    padding: 12px 14px; margin-top: 8px;
+  }
+  .info-big { font-size: 28px; font-weight: 600; color: var(--cem-azul-800); font-family: var(--font-mono); letter-spacing: -.02em; }
 
   /* BOTTOM NAV */
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; right: 0;
-    background: white; border-top: 1px solid var(--gris-borde);
+    background: var(--cem-papel-3);
+    border-top: 1px solid var(--cem-borde-2);
     padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 100;
+    box-shadow: var(--shadow-2); z-index: 100;
   }
   .btn {
-    padding: 10px 22px; border-radius: 8px; font-size: 15px; font-family: var(--font);
-    font-weight: 600; cursor: pointer; border: none; transition: all .15s;
+    padding: 10px 22px; border-radius: var(--radius-sm);
+    font-size: 15px; font-family: var(--font);
+    font-weight: 600; cursor: pointer; border: 1px solid transparent;
+    transition: background-color .15s var(--ease), color .15s var(--ease), border-color .15s var(--ease), transform .08s var(--ease);
   }
-  .btn-sec { background: var(--gris-bg); border: 1px solid var(--gris-borde); color: var(--gris-texto); }
-  .btn-sec:hover { background: #e8ede9; }
-  .btn-pri { background: var(--verde); color: white; }
-  .btn-pri:hover { background: var(--verde-medio); }
-  .btn-pri:active { transform: scale(.97); }
-  .nav-info { font-size: 13px; color: var(--gris-texto); text-align: center; line-height: 1.3; }
-  .nav-info strong { display: block; color: #222; font-size: 14px; }
+  .btn-sec {
+    background: var(--cem-papel-3);
+    border-color: var(--cem-borde);
+    color: var(--cem-tinta-2);
+  }
+  .btn-sec:hover { background: var(--cem-papel-2); border-color: var(--cem-azul-300); color: var(--cem-azul-800); }
+  .btn-pri {
+    background: var(--cem-azul-700); color: white;
+    border-color: var(--cem-azul-700);
+  }
+  .btn-pri:hover  { background: var(--cem-azul-800); border-color: var(--cem-azul-800); }
+  .btn-pri:active { transform: scale(.98); }
+  .btn:focus-visible { outline: 2px solid var(--cem-azul-700); outline-offset: 2px; }
+  .nav-info { font-size: 13px; color: var(--cem-tinta-3); text-align: center; line-height: 1.3; }
+  .nav-info strong { display: block; color: var(--cem-tinta); font-size: 14px; }
 
   /* SECTION */
   .section { display: none; }
   .section.active { display: block; }
 
   /* SUMMARY */
-  .summary-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--verde-claro); font-size: 13px; }
+  .summary-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--cem-borde-2); font-size: 13px; }
   .summary-row:last-child { border-bottom: none; }
-  .summary-key { color: var(--gris-texto); }
-  .summary-val { font-weight: 500; text-align: right; max-width: 60%; }
+  .summary-key { color: var(--cem-tinta-3); }
+  .summary-val { font-weight: 500; text-align: right; max-width: 60%; color: var(--cem-tinta); }
 
   /* GEO BUTTON */
   .geo-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 14px; border: 1px solid var(--verde-medio);
-    border-radius: 7px; font-size: 13px; font-weight: 500;
-    color: var(--verde); background: white; cursor: pointer;
-    margin-top: 6px; transition: all .15s;
+    padding: 8px 14px; border: 1px solid var(--cem-azul-700);
+    border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+    color: var(--cem-azul-700); background: var(--cem-papel-3); cursor: pointer;
+    margin-top: 6px; transition: all .15s var(--ease);
   }
-  .geo-btn:hover { background: var(--verde-claro); }
-  .geo-status { font-size: 12px; color: var(--gris-texto); margin-top: 4px; }
+  .geo-btn:hover { background: var(--cem-azul-50); }
+  .geo-status { font-size: 12px; color: var(--cem-tinta-3); margin-top: 4px; }
 
   /* TOAST */
   .toast {
     position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-    background: #222; color: white; padding: 10px 20px; border-radius: 8px;
-    font-size: 14px; font-weight: 500; z-index: 200; opacity: 0; transition: opacity .3s;
+    background: var(--cem-tinta); color: white;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 500; z-index: 200;
+    opacity: 0; transition: opacity .25s var(--ease);
     pointer-events: none; white-space: nowrap;
+    box-shadow: var(--shadow-3);
   }
   .toast.show { opacity: 1; }
 
   /* CONFIG PANEL */
   .config-panel {
-    background: var(--verde-claro); border: 1.5px solid var(--azul-esquina); border-radius: 10px;
+    background: var(--cem-azul-50);
+    border: 1px solid var(--cem-azul-200);
+    border-radius: var(--radius-md);
     padding: 14px 16px; margin-bottom: 16px;
   }
-  .config-panel .cfg-title { font-size: 14px; font-weight: 700; font-family: var(--font-title); color: var(--verde); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
-  .config-panel p { font-size: 13px; color: var(--gris-texto); margin-bottom: 8px; line-height: 1.5; }
+  .config-panel .cfg-title { font-size: 14px; font-weight: 700; font-family: var(--font-title); color: var(--cem-azul-800); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+  .config-panel p { font-size: 13px; color: var(--cem-tinta-3); margin-bottom: 8px; line-height: 1.5; }
   .config-panel input { background: white; }
+
+  /* ─── AUTOGUARDADO / BORRADORES ─── */
+  .cem-restore-alert {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+    max-width: 560px; width: calc(100% - 24px);
+    background: var(--cem-warn-bg);
+    border: 1px solid #ecd99a;
+    border-left: 4px solid var(--cem-ocre-500);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-3);
+    z-index: 200; font-family: var(--font); font-size: 13px; color: #5C4400;
+  }
+  .cem-restore-alert strong { color: var(--cem-azul-800); }
+  .cem-restore-alert .ar-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .cem-restore-alert button {
+    font-family: var(--font); font-weight: 600; font-size: 13px;
+    padding: 7px 14px; border-radius: var(--radius-sm);
+    border: 1px solid var(--cem-borde); background: white; cursor: pointer;
+    color: var(--cem-tinta-2);
+  }
+  .cem-restore-alert button.primary {
+    background: var(--cem-azul-700); color: white;
+    border-color: var(--cem-azul-700);
+  }
+  .cem-drafts-fab {
+    position: fixed; bottom: 80px; right: 16px;
+    background: var(--cem-azul-700); color: white; border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 16px; font-size: 13px; font-weight: 600;
+    cursor: pointer; box-shadow: var(--shadow-2);
+    z-index: 99; font-family: var(--font);
+    display: none; align-items: center; gap: 6px;
+  }
+  .cem-drafts-fab:hover { background: var(--cem-azul-800); }
+  .cem-drafts-modal {
+    position: fixed; inset: 0; background: rgba(6,43,81,.55);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 300; font-family: var(--font); padding: 16px;
+  }
+  .cem-drafts-panel {
+    background: var(--cem-papel-3);
+    border-radius: var(--radius-lg);
+    width: 100%; max-width: 560px; max-height: 80vh;
+    overflow: auto; padding: 18px;
+    border: 1px solid var(--cem-borde-2);
+    box-shadow: var(--shadow-3);
+  }
+  .cem-drafts-panel h3 {
+    font-family: var(--font-title); font-size: 16px; font-weight: 800;
+    color: var(--cem-azul-800); text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--cem-ocre-500);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cem-close { background: transparent; border: none; font-size: 22px; cursor: pointer; color: var(--cem-tinta-3); line-height: 1; }
+  .cem-draft-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; background: var(--cem-papel);
+    border-radius: var(--radius-md);
+    margin-bottom: 6px; font-size: 13px; gap: 8px;
+    border: 1px solid var(--cem-borde-2);
+  }
+  .cem-draft-item .meta { color: var(--cem-tinta-3); font-size: 12px; margin-top: 2px; }
+  .cem-draft-item button {
+    padding: 5px 10px; font-size: 12px; font-weight: 600;
+    border-radius: var(--radius-sm); border: 1px solid var(--cem-borde);
+    background: white; cursor: pointer; margin-left: 4px;
+    color: var(--cem-azul-700);
+  }
+  .cem-draft-item button.del { color: var(--cem-alert); }
+  .cem-drafts-empty { color: var(--cem-tinta-3); font-style: italic; padding: 14px; text-align: center; font-size: 13px; }
+  .cem-save-status {
+    position: fixed; bottom: 80px; left: 16px;
+    background: rgba(23,22,20,.92); color: white;
+    padding: 6px 12px; border-radius: var(--radius-sm);
+    font-size: 11px; font-weight: 500;
+    z-index: 99; opacity: 0; transition: opacity .25s var(--ease);
+    pointer-events: none; font-family: var(--font);
+  }
+  .cem-save-status.show { opacity: 1; }
 
   /* PRINT */
   @media print {
-    .app-header, .progress-wrap, .bottom-nav, .config-panel { display: none !important; }
+    .app-header, .progress-wrap, .bottom-nav, .config-panel,
+    .cem-drafts-fab, .cem-restore-alert, .cem-save-status { display: none !important; }
     .content { padding: 0; }
     .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
   }
@@ -202,7 +393,7 @@
 
 <div class="app-header">
   <div style="display:flex;align-items:center;gap:10px">
-    <div style="width:32px;height:32px;background:var(--azul-esquina);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-title);font-size:14px;letter-spacing:-.5px;flex-shrink:0;">CEM</div>
+    <div style="width:32px;height:32px;background:var(--cem-ocre-500);color:white;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:900;font-family:var(--font-title);font-size:14px;letter-spacing:-.5px;flex-shrink:0;">CEM</div>
     <div>
       <h1>Operativo de Salud Barrial</h1>
       <div class="sub">Municipalidad de Esquina · Secretaría de Salud</div>
@@ -588,7 +779,7 @@
       </div>
 
       <!-- FINDRISC -->
-      <div id="findrisc_box" class="hidden" style="margin-top:14px;padding:14px;border:2px solid var(--azul-esquina);border-radius:10px;background:white">
+      <div id="findrisc_box" class="hidden" style="margin-top:14px;padding:16px;border:1px solid var(--cem-ocre-300);border-left:4px solid var(--cem-ocre-500);border-radius:var(--radius-md);background:var(--cem-papel-3)">
         <div style="font-size:13px;font-weight:800;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--verde);margin-bottom:8px">Índice FINDRISC — Riesgo de diabetes tipo 2</div>
         <div class="findrisc-wrap">
           <span class="findrisc-score" id="findrisc_val">0</span>
@@ -901,13 +1092,15 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ─── AUTOGUARDADO: indicador y botón flotante ─── -->
+<div class="cem-save-status" id="cemSaveStatus">Guardado ✓</div>
+<button class="cem-drafts-fab" id="cemDraftsFab" onclick="cemBorradores.abrirLista()">
+  <span>📋</span><span id="cemDraftsCount">Borradores</span>
+</button>
+
 <script>
 // ──── CONFIGURACIÓN ────
-// Sheet ID hardcodeado — CEM Municipalidad de Esquina
 const SHEET_ID = '15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8';
-// La URL del Apps Script debe ser generada una sola vez y pegada aquí.
-// Estructura: https://script.google.com/macros/s/[DEPLOYMENT_ID]/exec
-// Apps Script publicado — URL activa:
 let SHEET_URL = 'https://script.google.com/macros/s/AKfycbwRDLsT2KoKJzh5sNx77nTx6auTPXplW5xGHmmktAD-99Pr4HflVaVlmF925bNlcWe8DA/exec';
 function toggleInstr(e){ e.preventDefault(); }
 
@@ -1113,6 +1306,8 @@ function updateConvivientes(){
       <div class="fg"><label class="lbl">Observaciones</label><textarea id="cv_obs_${i}" placeholder="Necesidades especiales, alertas..."></textarea></div>
     </div>`;
   }
+  // Reenganchar listeners de autoguardado a los campos recién creados
+  if (window.cemBorradores) cemBorradores.rebindListeners();
 }
 
 // ──── TOAST ────
@@ -1205,13 +1400,15 @@ async function guardarRegistro(){
   try {
     await fetch(SHEET_URL, {
       method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action: 'submit', data: data })
     });
     statusEl.innerHTML='<div class="alert alert-g">✓ Registro enviado correctamente a Google Sheets.</div>';
     showToast('✓ Enviado a Google Sheets');
     const local = JSON.parse(localStorage.getItem('registros_operativo')||'[]');
     local.push({...data, enviado:true}); localStorage.setItem('registros_operativo', JSON.stringify(local));
+    // ✱ AUTOGUARDADO: borrar el borrador correspondiente al registro recién enviado
+    if (window.cemBorradores) cemBorradores.eliminarActual();
   } catch(e) {
     statusEl.innerHTML='<div class="alert alert-r">Error al enviar. Registro guardado localmente (se puede reenviar).</div>';
     const local = JSON.parse(localStorage.getItem('registros_operativo')||'[]');
@@ -1246,145 +1443,597 @@ function nuevoRegistro(){
     document.getElementById('h_nro').value = nro+1;
     document.getElementById('nroDisplay').textContent='#'+(nro+1);
     document.getElementById('h_fecha').value=new Date().toISOString().split('T')[0];
+    // ✱ AUTOGUARDADO: olvidarse del borrador actual al iniciar uno nuevo
+    if (window.cemBorradores) cemBorradores.olvidarActual();
     window.scrollTo({top:0});
   }
 }
 </script>
 
-<!--
-════════════════════════════════════════════════════════════════
-  OPERATIVO DE SALUD BARRIAL — Google Apps Script
-  
-  INSTRUCCIONES:
-  1. Abrí tu Google Sheet (ID: 15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8)
-     → https://docs.google.com/spreadsheets/d/15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8/edit
-  2. Menú: Extensiones → Apps Script
-  3. Borrá TODO el código existente
-  4. Pegá este bloque completo (desde "// ====" hasta el último "}")
-  5. Guardá (Ctrl+S)
-  6. Implementar → Nueva implementación → Aplicación web
-     - Descripción: Operativo Salud v1
-     - Ejecutar como: Yo (tu cuenta)
-     - Quién tiene acceso: Cualquier usuario
-  7. Copiá la URL generada → abrí el HTML → buscá "https://script.google.com/macros/s/AKfycbwRDLsT2KoKJzh5sNx77nTx6auTPXplW5xGHmmktAD-99Pr4HflVaVlmF925bNlcWe8DA/exec"
-     y reemplazalo por el ID de implementación
-════════════════════════════════════════════════════════════════
+<!-- ════════════════════════════════════════════════════════════════
+     AUTOGUARDADO LOCAL + SYNC A SHEETS — Operativo de Salud Barrial v2
+     • Guarda automáticamente en localStorage (debounce 500ms)
+     • Sincroniza con Google Sheets cada 30s si hay DNI + conexión
+     • Al ingresar un DNI consulta el servidor para retomar desde otro dispositivo
+     • Botón flotante con borradores locales + servidor (todos los dispositivos)
+     • Limpieza automática de borradores con más de 30 días (local)
+     ════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
 
-// ============================================================
-//  OPERATIVO DE SALUD BARRIAL — Google Apps Script
-//  Planilla destino: 15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8
-// ============================================================
+  const STORAGE_PREFIX  = 'cem-salud-borrador-';
+  const TEMP_PREFIX     = 'cem-salud-temp-';
+  const MAX_AGE_DAYS    = 30;
+  const DEBOUNCE_MS     = 500;
+  const SYNC_INTERVAL_MS = 30 * 1000;
+  // Reutiliza la URL global SHEET_URL definida arriba
+  const REMOTE_URL = (typeof SHEET_URL !== 'undefined') ? SHEET_URL : '';
 
-var HEADERS = [
-  // ── Metadatos del operativo ──
-  "timestamp", "barrio", "fecha", "profesional", "nroRegistro",
-  "geoLat", "geoLon", "geoRef",
-  // ── Datos personales ──
-  "apellido", "nombre", "dni", "fnac", "edad", "sexo", "genero",
-  "dir", "tel", "escolaridad", "laboral",
-  // ── Embarazo ──
-  "embarazo", "semanas", "ngest", "npartos", "ctrlPren", "sumarEmb",
-  "vacGripeEmb", "vacDtpa", "compEmb", "obsEmb",
-  // ── Mediciones clínicas ──
-  "peso", "talla", "periabd", "bmi", "taSis", "taDia",
-  "glucemia", "glucond", "fc", "temp", "spo2",
-  "findrisc", "findriscCategoria",
-  // ── HTA ──
-  "hta", "htaMed", "htaAdh",
-  // ── Diabetes ──
-  "dbts", "dbtsMed", "dbtsAdh",
-  // ── Cardiovascular ──
-  "cv", "cvMed", "cvAdh",
-  // ── Respiratorio ──
-  "resp", "respMed", "respAdh",
-  // ── Oncología ──
-  "onco", "oncoTipo", "oncoTto",
-  // ── ITS ──
-  "its", "itsTto", "itsMed", "itsAdh",
-  // ── Otros antecedentes ──
-  "antFamDbts", "otrasEnf", "otrasMed", "ultimaConsulta",
-  // ── Controles ginecológicos ──
-  "pap", "papRes", "mamo", "ultGineco", "mac",
-  // ── Salud mental ──
-  "smRef", "smDx", "smTto", "smRiesgo",
-  // ── Consumo de sustancias ──
-  "sTabaco", "fTabaco", "cTabaco", "rTabaco",
-  "sAlcohol", "fAlcohol", "cAlcohol", "alcDep", "rAlcohol",
-  "sCannabis", "fCannabis", "rCannabis",
-  "sCocaina", "fCocaina", "cCocaina",
-  "sPsico", "cPsico", "obsSM",
-  // ── Cobertura y acceso ──
-  "cobertura", "osNombre", "acceso", "barrera", "vacunas",
-  "odonto", "odoUlt", "odoMotivo",
-  // ── Vivienda / hogar ──
-  "nHogar", "nMenores", "vivienda", "agua", "cloacas",
-  // ── Convivientes (1–6) ──
-  "c1_vinculo","c1_edad","c1_genero","c1_salud","c1_cronicas","c1_sm","c1_cud","c1_ctrl","c1_obs",
-  "c2_vinculo","c2_edad","c2_genero","c2_salud","c2_cronicas","c2_sm","c2_cud","c2_ctrl","c2_obs",
-  "c3_vinculo","c3_edad","c3_genero","c3_salud","c3_cronicas","c3_sm","c3_cud","c3_ctrl","c3_obs",
-  "c4_vinculo","c4_edad","c4_genero","c4_salud","c4_cronicas","c4_sm","c4_cud","c4_ctrl","c4_obs",
-  "c5_vinculo","c5_edad","c5_genero","c5_salud","c5_cronicas","c5_sm","c5_cud","c5_ctrl","c5_obs",
-  "c6_vinculo","c6_edad","c6_genero","c6_salud","c6_cronicas","c6_sm","c6_cud","c6_ctrl","c6_obs",
-  // ── Cierre y derivaciones ──
-  "derivaciones", "urgenciaDer", "turno", "material", "obsGeneral"
-];
+  let currentKey = null;
+  let saveTimer  = null;
+  let syncTimer  = null;
+  let lastSyncedSnapshot = null;  // para evitar re-syncear si no hay cambios
+  let lastRemoteAt = 0;
 
-// ============================================================
-//  doPost — recibe cada registro del formulario
-// ============================================================
-function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.openById("15bdWPC1mK7HP24bW71ym7qR_lJ0Q8ZgmaIapluQTdT8").getActiveSheet();
-    var data  = JSON.parse(e.postData.contents);
+  // ---------- localStorage utils ----------
+  function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function safeSet(k,v){ try { localStorage.setItem(k,v); return true; } catch(e){ console.warn('localStorage:', e); return false; } }
+  function safeDel(k){ try { localStorage.removeItem(k); } catch(e){} }
 
-    // Primera vez: crear encabezados con formato CEM
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(HEADERS);
-      var hRange = sheet.getRange(1, 1, 1, HEADERS.length);
-      hRange.setFontWeight('bold');
-      hRange.setBackground('#0F2744');
-      hRange.setFontColor('#ffffff');
-      hRange.setFontSize(11);
-      sheet.setFrozenRows(1);
+  function listLocalDrafts(){
+    const items = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || (!k.startsWith(STORAGE_PREFIX) && !k.startsWith(TEMP_PREFIX))) continue;
+      const raw = safeGet(k);
+      if (!raw) continue;
+      try { items.push(Object.assign({ _key: k, _scope: 'local' }, JSON.parse(raw))); } catch(e){}
     }
+    return items.sort((a,b) => (b.savedAt||'').localeCompare(a.savedAt||''));
+  }
 
-    // Armar la fila en el orden exacto de HEADERS
-    var row = HEADERS.map(function(key) {
-      var v = data[key];
-      return (v !== undefined && v !== null) ? v : '';
+  function purgeOldLocalDrafts(){
+    const cutoff = Date.now() - MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+    listLocalDrafts().forEach(d => {
+      if (d.savedAt && new Date(d.savedAt).getTime() < cutoff) safeDel(d._key);
+    });
+  }
+
+  // ---------- Snapshot/restore del formulario ----------
+  function getAllFields(){
+    return Array.from(document.querySelectorAll('input, select, textarea')).filter(el => el.name || el.id);
+  }
+
+  function snapshotForm(){
+    const data = {};
+    getAllFields().forEach(el => {
+      if (el.type === 'checkbox') {
+        const k = el.name + '|' + el.value;
+        data['__chk__' + k] = el.checked;
+      } else if (el.type === 'radio') {
+        if (el.checked) data['__rad__' + el.name] = el.value;
+      } else {
+        const id = el.id || el.name;
+        if (id) data[id] = el.value;
+      }
+    });
+    data.__nHogar = document.getElementById('n_hogar') ? document.getElementById('n_hogar').value : '';
+    return data;
+  }
+
+  function restoreToForm(data){
+    if (!data) return;
+    if (data.__nHogar) {
+      const nh = document.getElementById('n_hogar');
+      if (nh) { nh.value = data.__nHogar; if (typeof updateConvivientes === 'function') updateConvivientes(); }
+    }
+    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+    document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = false);
+    document.querySelectorAll('.opt').forEach(o => o.classList.remove('checked'));
+
+    getAllFields().forEach(el => {
+      if (el.type === 'checkbox') {
+        const k = '__chk__' + el.name + '|' + el.value;
+        if (data[k]) {
+          el.checked = true;
+          if (el.closest('.opt')) el.closest('.opt').classList.add('checked');
+        }
+      } else if (el.type === 'radio') {
+        const v = data['__rad__' + el.name];
+        if (v !== undefined && el.value === v) {
+          el.checked = true;
+          if (el.closest('.opt')) el.closest('.opt').classList.add('checked');
+        }
+      } else {
+        const id = el.id || el.name;
+        if (id && data[id] !== undefined) el.value = data[id];
+      }
+    });
+    if (typeof toggleEmbarazo === 'function') toggleEmbarazo();
+    if (typeof toggleGineco === 'function')   toggleGineco();
+    if (typeof calcBMI === 'function')        calcBMI();
+    if (typeof checkTA === 'function')        checkTA();
+    if (typeof checkGluc === 'function')      checkGluc();
+    if (typeof updateFINDRISC === 'function') updateFINDRISC();
+    ['cv:med_cv', 'resp:med_resp', 'its:its_block'].forEach(pair => {
+      const [name, block] = pair.split(':');
+      if (typeof toggleMedCheck === 'function') toggleMedCheck(name, block);
+    });
+    ['hta','dbts'].forEach(key => {
+      const v = data['__rad__'+key];
+      if (v && v !== 'No' && v !== 'No sabe' && typeof toggleMed === 'function') toggleMed(key, true);
+    });
+    if (data['__rad__onco'] === 'En tratamiento' && typeof toggleMed === 'function') toggleMed('onco_tto_block', true);
+    ['tabaco','alcohol','cannabis','cocaina','psico'].forEach(s => {
+      if (data['__rad__s_'+s] === 'Sí' && typeof toggleSust === 'function') toggleSust(s, true);
+    });
+    const odo = data['__rad__odonto'];
+    if (odo && odo !== 'Sí') {
+      const blk = document.getElementById('odonto_blk');
+      if (blk) blk.classList.remove('hidden');
+    }
+    const nro = document.getElementById('h_nro');
+    if (nro && nro.value) document.getElementById('nroDisplay').textContent = '#' + nro.value;
+  }
+
+  function isFormEmpty(data){
+    const interesting = Object.keys(data).filter(k => !['fecha','h_fecha','glucond','embarazo','hta','dbts','onco','sm_ref','s_tabaco','s_alcohol','s_cannabis','s_cocaina','s_psico','ant_fam'].includes(k));
+    return interesting.every(k => {
+      const v = data[k];
+      return v === '' || v === false || v == null;
+    });
+  }
+
+  function getCurrentDni(){
+    const el = document.getElementById('dni');
+    return el ? (el.value || '').replace(/\s+/g,'').trim() : '';
+  }
+
+  function metaFromData(data){
+    const apellido = data.apellido || '';
+    const nombre   = data.nombre   || '';
+    const barrio   = data.h_barrio || data.barrio || '';
+    return [apellido, nombre, barrio].filter(Boolean).join(' · ') || '(sin datos)';
+  }
+
+  // ---------- Local autosave ----------
+  function autosaveLocal(){
+    const data = snapshotForm();
+    if (isFormEmpty(data)) return;
+
+    const dni = getCurrentDni();
+    const newKey = dni
+      ? STORAGE_PREFIX + dni
+      : (currentKey && currentKey.startsWith(TEMP_PREFIX) ? currentKey : TEMP_PREFIX + Date.now());
+
+    if (currentKey && currentKey !== newKey) safeDel(currentKey);
+    currentKey = newKey;
+
+    const ok = safeSet(currentKey, JSON.stringify({ data, savedAt: new Date().toISOString() }));
+    if (ok) showSaveStatus('Guardado local ✓');
+    updateBadge();
+  }
+
+  function scheduleAutosave(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(autosaveLocal, DEBOUNCE_MS);
+  }
+
+  // ---------- Remote sync ----------
+  function buildPayloadForRemote(){
+    if (typeof collectData !== 'function') return null;
+    const dni = getCurrentDni();
+    if (!dni) return null;
+    const payload = collectData();
+    if (!payload.dni) payload.dni = dni;
+    return payload;
+  }
+
+  async function syncToRemote(){
+    if (!REMOTE_URL || !navigator.onLine) return;
+    const payload = buildPayloadForRemote();
+    if (!payload) return;
+
+    // Evitar requests redundantes: si nada cambió, no sync
+    const fingerprint = JSON.stringify(payload);
+    if (fingerprint === lastSyncedSnapshot) return;
+
+    try {
+      // text/plain evita el preflight CORS, Apps Script lo procesa igual
+      await fetch(REMOTE_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveDraft', data: payload })
+      });
+      lastSyncedSnapshot = fingerprint;
+      lastRemoteAt = Date.now();
+      showSaveStatus('Sincronizado ✓');
+    } catch (e) {
+      console.warn('Sync remoto falló:', e);
+    }
+  }
+
+  function startSyncLoop(){
+    if (syncTimer) return;
+    syncTimer = setInterval(syncToRemote, SYNC_INTERVAL_MS);
+    window.addEventListener('online', () => syncToRemote());
+  }
+
+  // GET requiere lectura de respuesta — usamos fetch con CORS estándar.
+  // Apps Script con respuesta JSON soporta GET sin CORS si va el redirect.
+  async function fetchRemoteDraft(dni){
+    if (!REMOTE_URL || !navigator.onLine) return null;
+    try {
+      const url = REMOTE_URL + '?action=getDraft&dni=' + encodeURIComponent(dni);
+      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+      if (!res.ok) return null;
+      const json = await res.json();
+      return (json && json.draft) ? json.draft : null;
+    } catch (e) {
+      console.warn('No se pudo leer borrador remoto:', e);
+      return null;
+    }
+  }
+
+  async function fetchRemoteDraftsList(){
+    if (!REMOTE_URL || !navigator.onLine) return [];
+    try {
+      const res = await fetch(REMOTE_URL + '?action=listDrafts', { method: 'GET', redirect: 'follow' });
+      if (!res.ok) return [];
+      const json = await res.json();
+      return (json && Array.isArray(json.drafts)) ? json.drafts : [];
+    } catch (e) {
+      console.warn('No se pudo listar borradores remotos:', e);
+      return [];
+    }
+  }
+
+  // El servidor guarda los datos "planos" del form (lo que devuelve collectData).
+  // El localStorage guarda el snapshot del DOM (con __chk__/__rad__).
+  // Para restaurar desde un servidor draft, lo convertimos al formato DOM.
+  function remoteDraftToFormData(remote){
+    const data = {};
+    // text inputs / numbers / dates / textareas / selects mapeados directo:
+    const directMap = {
+      h_barrio: remote.barrio, h_fecha: remote.fecha, h_prof: remote.profesional, h_nro: remote.nroRegistro,
+      geo_lat: remote.geoLat, geo_lon: remote.geoLon, geo_ref: remote.geoRef,
+      apellido: remote.apellido, nombre: remote.nombre, dni: remote.dni,
+      fnac: remote.fnac, edad: remote.edad, sexo: remote.sexo, genero: remote.genero,
+      dir: remote.dir, tel: remote.tel, escolaridad: remote.escolaridad, laboral: remote.laboral,
+      semanas: remote.semanas, ngest: remote.ngest, npartos: remote.npartos,
+      vac_gripe_emb: remote.vacGripeEmb, vac_dtpa: remote.vacDtpa, obs_emb: remote.obsEmb,
+      peso: remote.peso, talla: remote.talla, periabd: remote.periabd,
+      ta_sis: remote.taSis, ta_dia: remote.taDia, glucemia: remote.glucemia,
+      fc: remote.fc, temp: remote.temp, spo2: remote.spo2,
+      hta_med: remote.htaMed, dbts_med: remote.dbtsMed, cv_med: remote.cvMed, resp_med: remote.respMed,
+      onco_tipo: remote.oncoTipo, onco_tto: remote.oncoTto,
+      its_tto: remote.itsTto, its_med: remote.itsMed,
+      otras_enf: remote.otrasEnf, otras_med: remote.otrasMed, ultima_consulta: remote.ultimaConsulta,
+      ult_gineco: remote.ultGineco,
+      f_tabaco: remote.fTabaco, c_tabaco: remote.cTabaco,
+      f_alcohol: remote.fAlcohol, c_alcohol: remote.cAlcohol,
+      f_cannabis: remote.fCannabis,
+      f_cocaina: remote.fCocaina, c_cocaina: remote.cCocaina,
+      c_psico: remote.cPsico, obs_sm: remote.obsSM,
+      os_nombre: remote.osNombre, odonto_ult: remote.odoUlt, odonto_motivo: remote.odoMotivo,
+      n_hogar: remote.nHogar, n_menores: remote.nMenores, vivienda: remote.vivienda, agua: remote.agua,
+      urgencia_der: remote.urgenciaDer, obs_general: remote.obsGeneral
+    };
+    Object.keys(directMap).forEach(id => {
+      if (directMap[id] !== undefined && directMap[id] !== '') data[id] = directMap[id];
     });
 
-    sheet.appendRow(row);
+    // Radios
+    const radios = {
+      embarazo: remote.embarazo, ctrl_pren: remote.ctrlPren, sumar_emb: remote.sumarEmb,
+      glucond: remote.glucond, hta: remote.hta, hta_adh: remote.htaAdh,
+      dbts: remote.dbts, dbts_adh: remote.dbtsAdh, cv_adh: remote.cvAdh, resp_adh: remote.respAdh,
+      onco: remote.onco, its_adh: remote.itsAdh,
+      ant_fam: remote.antFamDbts, pap: remote.pap, pap_res: remote.papRes, mamo: remote.mamo,
+      sm_ref: remote.smRef, sm_tto: remote.smTto,
+      s_tabaco: remote.sTabaco, r_tabaco: remote.rTabaco,
+      s_alcohol: remote.sAlcohol, alc_dep: remote.alcDep, r_alcohol: remote.rAlcohol,
+      s_cannabis: remote.sCannabis, r_cannabis: remote.rCannabis,
+      s_cocaina: remote.sCocaina, s_psico: remote.sPsico,
+      cobertura: remote.cobertura, vacunas: remote.vacunas, odonto: remote.odonto,
+      cloacas: remote.cloacas, turno: remote.turno
+    };
+    Object.keys(radios).forEach(name => {
+      if (radios[name]) data['__rad__' + name] = radios[name];
+    });
 
-    // Formatear timestamp como fecha legible (col 1)
-    var lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow, 1).setNumberFormat('dd/mm/yyyy hh:mm');
+    // Checkboxes (vienen como string separado por ", ")
+    const cbGroups = {
+      lugar_ctrl: remote.ctrlPren ? '' : '',
+      comp_emb: remote.compEmb,
+      cv: remote.cv, resp: remote.resp, its: remote.its,
+      mac: remote.mac, sm_dx: remote.smDx, sm_riesgo: remote.smRiesgo,
+      acceso: remote.acceso, barrera: remote.barrera,
+      derivacion: remote.derivaciones, material: remote.material
+    };
+    Object.keys(cbGroups).forEach(name => {
+      if (cbGroups[name]) {
+        cbGroups[name].split(',').map(s => s.trim()).filter(Boolean).forEach(val => {
+          data['__chk__' + name + '|' + val] = true;
+        });
+      }
+    });
 
-    // Auto-ajustar primeras 8 columnas (metadatos + nombre)
-    sheet.autoResizeColumns(1, 8);
+    // Convivientes
+    data.__nHogar = remote.nHogar || '';
+    for (let i = 1; i <= 6; i++) {
+      const p = 'c' + i + '_';
+      if (remote[p+'vinculo']) data['cv_vinculo_'+i] = remote[p+'vinculo'];
+      if (remote[p+'edad'])    data['cv_edad_'+i]    = remote[p+'edad'];
+      if (remote[p+'genero'])  data['cv_genero_'+i]  = remote[p+'genero'];
+      if (remote[p+'salud'])   data['__rad__cv_salud_'+i] = remote[p+'salud'];
+      if (remote[p+'cud'])     data['__rad__cv_cud_'+i]   = remote[p+'cud'];
+      if (remote[p+'ctrl'])    data['__rad__cv_ctrl_'+i]  = remote[p+'ctrl'];
+      if (remote[p+'cronicas']) {
+        remote[p+'cronicas'].split(',').map(s=>s.trim()).filter(Boolean).forEach(v => {
+          data['__chk__cv_cron_'+i+'|'+v] = true;
+        });
+      }
+      if (remote[p+'sm']) {
+        remote[p+'sm'].split(',').map(s=>s.trim()).filter(Boolean).forEach(v => {
+          data['__chk__cv_sm_'+i+'|'+v] = true;
+        });
+      }
+      if (remote[p+'obs']) data['cv_obs_'+i] = remote[p+'obs'];
+    }
 
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok', fila: lastRow }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'error', mensaje: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return data;
   }
-}
 
-// ============================================================
-//  doGet — verifica que el script esté publicado correctamente
-//  Abrí la URL del web app en el navegador para comprobar
-// ============================================================
-function doGet(e) {
-  return ContentService
-    .createTextOutput('CEM Esquina — Operativo de Salud Barrial — Apps Script activo ✓')
-    .setMimeType(ContentService.MimeType.TEXT);
-}
+  // ---------- UI ----------
+  function showRestoreAlert(dni, draft, scope){
+    dismissRestoreAlert();
+    const el = document.createElement('div');
+    el.className = 'cem-restore-alert';
+    el.id = 'cem-restore-alert';
+    const meta = metaFromData(draft.data || draft);
+    const when = draft.savedAt || draft.__actualizado || '';
+    const scopeLabel = scope === 'remote'
+      ? '<span style="background:var(--cem-azul-700);color:white;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:6px">otro dispositivo</span>'
+      : '';
+    el.innerHTML =
+      'Hay un registro <strong>incompleto</strong> para el DNI <strong>' + dni + '</strong>' + scopeLabel +
+      (meta !== '(sin datos)' ? '<br><span style="font-size:12px">' + meta + '</span>' : '') +
+      (when ? '<div style="font-size:11px;margin-top:3px;opacity:.8">Guardado el ' + new Date(when).toLocaleString() + '</div>' : '') +
+      '<div class="ar-actions">' +
+      '<button class="primary" id="cem-btn-restore">Continuar borrador</button>' +
+      '<button id="cem-btn-dismiss">Empezar uno nuevo</button>' +
+      '</div>';
+    document.body.appendChild(el);
+    document.getElementById('cem-btn-restore').onclick = () => {
+      const formData = scope === 'remote' ? remoteDraftToFormData(draft) : draft.data;
+      restoreToForm(formData);
+      currentKey = STORAGE_PREFIX + dni;
+      // Guardar también en local para mantener consistencia
+      safeSet(currentKey, JSON.stringify({ data: snapshotForm(), savedAt: new Date().toISOString() }));
+      lastSyncedSnapshot = null; // forzar próximo sync
+      dismissRestoreAlert();
+      updateBadge();
+      showSaveStatus('Borrador restaurado ✓');
+    };
+    document.getElementById('cem-btn-dismiss').onclick = dismissRestoreAlert;
+  }
 
-════════════════════════════════════════════════════════════════
--->
+  function dismissRestoreAlert(){
+    const el = document.getElementById('cem-restore-alert');
+    if (el) el.remove();
+  }
+
+  function showSaveStatus(text){
+    const el = document.getElementById('cemSaveStatus');
+    if (!el) return;
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(showSaveStatus._t);
+    showSaveStatus._t = setTimeout(() => el.classList.remove('show'), 1800);
+  }
+
+  function updateBadge(){
+    const fab = document.getElementById('cemDraftsFab');
+    const lbl = document.getElementById('cemDraftsCount');
+    if (!fab || !lbl) return;
+    const n = listLocalDrafts().length;
+    lbl.textContent = 'Borradores' + (n > 0 ? ' (' + n + ' acá)' : '');
+    fab.style.display = 'flex'; // siempre visible para acceder a borradores remotos
+  }
+
+  async function openDraftsModal(){
+    const local = listLocalDrafts();
+    const modal = document.createElement('div');
+    modal.className = 'cem-drafts-modal';
+    modal.onclick = e => { if (e.target === modal) modal.remove(); };
+    modal.innerHTML = '<div class="cem-drafts-panel">' +
+      '<h3>Borradores activos<button class="cem-close">×</button></h3>' +
+      '<div id="cem-drafts-body"><div class="cem-drafts-empty">Cargando...</div></div></div>';
+    document.body.appendChild(modal);
+    modal.querySelector('.cem-close').onclick = () => modal.remove();
+
+    // Buscar remotos en paralelo
+    const remote = await fetchRemoteDraftsList();
+    const body = document.getElementById('cem-drafts-body');
+    if (!body) return; // modal cerrado mientras tanto
+
+    // Combinar: si un DNI está en ambos, preferir el más reciente
+    const combined = new Map();
+    local.forEach(d => {
+      if (!d._key.startsWith(STORAGE_PREFIX)) return;
+      const dni = d._key.slice(STORAGE_PREFIX.length);
+      combined.set(dni, { dni, scope: 'local', _local: d, savedAt: d.savedAt });
+    });
+    remote.forEach(d => {
+      if (!d.dni) return;
+      const existing = combined.get(d.dni);
+      const remoteAt = d.actualizado || '';
+      if (!existing || (remoteAt > (existing.savedAt || ''))) {
+        combined.set(d.dni, { dni: d.dni, scope: 'remote', _remote: d, savedAt: remoteAt,
+                              apellido: d.apellido, nombre: d.nombre, barrio: d.barrio, profesional: d.profesional });
+      } else {
+        existing.scope = 'both';
+      }
+    });
+
+    const all = Array.from(combined.values()).sort((a,b) => (b.savedAt||'').localeCompare(a.savedAt||''));
+
+    if (all.length === 0) {
+      body.innerHTML = '<div class="cem-drafts-empty">No hay borradores activos</div>';
+      return;
+    }
+
+    body.innerHTML = all.map(d => {
+      let meta;
+      if (d._local) {
+        meta = metaFromData(d._local.data);
+      } else {
+        meta = [d.apellido, d.nombre, d.barrio].filter(Boolean).join(' · ') || '(sin datos)';
+      }
+      const prof = d.profesional ? ('<div class="meta">Cargado por: ' + d.profesional + '</div>') : '';
+      const when = d.savedAt ? new Date(d.savedAt).toLocaleString() : '';
+      const scopeBadge = d.scope === 'remote'
+        ? '<span style="background:var(--cem-azul-100);color:var(--cem-azul-800);font-size:10px;padding:2px 7px;border-radius:999px;margin-left:4px">otro disp.</span>'
+        : (d.scope === 'both'
+            ? '<span style="background:var(--cem-ok-bg);color:var(--cem-ok);font-size:10px;padding:2px 7px;border-radius:999px;margin-left:4px">sincronizado</span>'
+            : '');
+      return '<div class="cem-draft-item" data-dni="'+d.dni+'" data-scope="'+d.scope+'">' +
+               '<div><strong>DNI '+d.dni+'</strong>'+scopeBadge+' — '+meta+
+                 prof + (when ? '<div class="meta">'+when+'</div>' : '') +
+               '</div>' +
+               '<div><button data-action="open">Abrir</button>' +
+                    (d.scope !== 'remote' ? '<button data-action="del" class="del">Eliminar</button>' : '') +
+               '</div>' +
+             '</div>';
+    }).join('');
+
+    body.querySelectorAll('.cem-draft-item').forEach(item => {
+      const dni = item.dataset.dni;
+      const scope = item.dataset.scope;
+      item.querySelector('[data-action="open"]').onclick = async () => {
+        let formData = null;
+        if (scope === 'local' || scope === 'both') {
+          const raw = safeGet(STORAGE_PREFIX + dni);
+          if (raw) formData = JSON.parse(raw).data;
+        }
+        if (!formData && (scope === 'remote' || scope === 'both')) {
+          const r = await fetchRemoteDraft(dni);
+          if (r) formData = remoteDraftToFormData(r);
+        }
+        if (formData) {
+          restoreToForm(formData);
+          currentKey = STORAGE_PREFIX + dni;
+          // Persistir local para mantener coherencia
+          safeSet(currentKey, JSON.stringify({ data: snapshotForm(), savedAt: new Date().toISOString() }));
+          lastSyncedSnapshot = null;
+          modal.remove();
+          dismissRestoreAlert();
+          showSaveStatus('Borrador abierto ✓');
+          updateBadge();
+        } else {
+          alert('No se pudo abrir el borrador.');
+        }
+      };
+      const delBtn = item.querySelector('[data-action="del"]');
+      if (delBtn) {
+        delBtn.onclick = () => {
+          if (confirm('¿Eliminar este borrador local? (no afecta a otros dispositivos)')) {
+            safeDel(STORAGE_PREFIX + dni);
+            if (currentKey === STORAGE_PREFIX + dni) currentKey = null;
+            modal.remove();
+            updateBadge();
+            openDraftsModal();
+          }
+        };
+      }
+    });
+  }
+
+  // ---------- listeners ----------
+  function bindListeners(){
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.dataset.cemBound) return;
+      el.dataset.cemBound = '1';
+      el.addEventListener('input',  scheduleAutosave);
+      el.addEventListener('change', scheduleAutosave);
+    });
+    const dniEl = document.getElementById('dni');
+    if (dniEl && !dniEl.dataset.cemDniBound) {
+      dniEl.dataset.cemDniBound = '1';
+      dniEl.addEventListener('blur', async () => {
+        const dni = getCurrentDni();
+        if (!dni) return;
+        const localKey = STORAGE_PREFIX + dni;
+        if (currentKey === localKey) return;
+
+        // 1) Local primero (rápido)
+        const localRaw = safeGet(localKey);
+        const localDraft = localRaw ? JSON.parse(localRaw) : null;
+
+        // 2) Remoto (si hay conexión)
+        const remoteDraft = await fetchRemoteDraft(dni);
+
+        // ¿Cuál mostramos?
+        if (localDraft && remoteDraft) {
+          const remoteAt = remoteDraft.__actualizado || '';
+          const localAt  = localDraft.savedAt || '';
+          // Mostrar el más reciente
+          if (remoteAt > localAt) showRestoreAlert(dni, remoteDraft, 'remote');
+          else                    showRestoreAlert(dni, localDraft,  'local');
+        } else if (remoteDraft) {
+          showRestoreAlert(dni, remoteDraft, 'remote');
+        } else if (localDraft) {
+          showRestoreAlert(dni, localDraft, 'local');
+        }
+      });
+    }
+  }
+
+  // ---------- API pública ----------
+  window.cemBorradores = {
+    eliminarActual: function(){
+      let dni = '';
+      if (currentKey && currentKey.startsWith(STORAGE_PREFIX)) {
+        dni = currentKey.slice(STORAGE_PREFIX.length);
+      }
+      if (currentKey) safeDel(currentKey);
+      currentKey = null;
+      lastSyncedSnapshot = null;
+      updateBadge();
+      // El servidor borra el borrador automáticamente en el handler "submit",
+      // pero si por algún motivo no, aquí garantizamos:
+      if (dni && REMOTE_URL && navigator.onLine) {
+        fetch(REMOTE_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'deleteDraft', dni })
+        }).catch(()=>{});
+      }
+    },
+    olvidarActual: function(){
+      currentKey = null;
+      lastSyncedSnapshot = null;
+    },
+    abrirLista: openDraftsModal,
+    rebindListeners: bindListeners,
+    sincronizarAhora: syncToRemote
+  };
+
+  // ---------- init ----------
+  function init(){
+    purgeOldLocalDrafts();
+    bindListeners();
+    updateBadge();
+    startSyncLoop();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
 </body>
 </html>
